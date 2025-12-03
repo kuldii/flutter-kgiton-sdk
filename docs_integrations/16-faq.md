@@ -63,11 +63,11 @@ See [Authorization Guide](02-authorization.md) for details.
 
 ### Q: Is there a free trial?
 
-**A:** Contact sales@kgiton.com to discuss evaluation options for qualified organizations.
+**A:** Contact support@kgiton.com to discuss evaluation options for qualified organizations.
 
 ### Q: How much does the SDK cost?
 
-**A:** Pricing varies by license type (Development, Commercial, Enterprise). Contact sales@kgiton.com for a quote.
+**A:** Pricing varies by license type (Development, Commercial, Enterprise). Contact support@kgiton.com for a quote.
 
 ### Q: What happens if my license expires?
 

@@ -120,7 +120,7 @@ Common issues and solutions when using the KGiTON SDK.
 
 **Solution:**
 - Contact PT KGiTON for renewal
-- Email: sales@kgiton.com
+- Email: support@kgiton.com
 
 ---
 

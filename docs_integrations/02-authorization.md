@@ -324,7 +324,7 @@ try {
 
 **Before Expiration**:
 - You'll receive renewal reminders (30, 14, 7 days before)
-- Contact sales@kgiton.com to renew
+- Contact support@kgiton.com to renew
 - Existing deployments continue working until expiration
 
 **After Expiration**:
@@ -342,7 +342,7 @@ try {
 ### License Upgrade
 
 To upgrade from Development to Commercial:
-1. Email: sales@kgiton.com
+1. Email: support@kgiton.com
 2. Provide current license key
 3. Discuss upgrade terms
 4. Complete upgrade process
@@ -376,7 +376,7 @@ To upgrade from Development to Commercial:
 ### If You Suspect Violation
 
 If you believe someone is using your license unauthorized:
-1. Email: security@kgiton.com
+1. Email: support@kgiton.com
 2. Change your license key immediately
 3. Review access logs
 4. Update security measures
@@ -388,7 +388,7 @@ If you believe someone is using your license unauthorized:
 ### For License Inquiries
 
 **Sales & Licensing**:
-- 📧 Email: sales@kgiton.com
+- 📧 Email: support@kgiton.com
 - 🌐 Web: https://kgiton.com/licensing
 - 📱 Phone: [Your Phone Number]
 
@@ -403,7 +403,7 @@ If you believe someone is using your license unauthorized:
 ### For Security Issues
 
 **Security Team**:
-- 📧 Email: security@kgiton.com
+- 📧 Email: support@kgiton.com
 - Response: Within 48 hours
 
 ---

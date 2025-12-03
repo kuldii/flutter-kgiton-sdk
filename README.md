@@ -175,7 +175,7 @@ See inline documentation in source code for complete API details.
 For authorized users:
 - 🐛 [Report Issues](https://github.com/kuldii/flutter-kgiton-sdk/issues)
 - 📧 Technical Support: support@kgiton.com
-- 🔒 Security Issues: security@kgiton.com
+- 🔒 Security Issues: support@kgiton.com
 - 🌐 Website: https://kgiton.com
 
 ## License
@@ -209,7 +209,7 @@ See [LICENSE](LICENSE) file for complete terms and conditions.
 **Contact Information**:
 - 📧 Email: support@kgiton.com
 - 🌐 Website: https://kgiton.com
-- 🔒 Security: security@kgiton.com
+- 🔒 Security: support@kgiton.com
 
 ---
 

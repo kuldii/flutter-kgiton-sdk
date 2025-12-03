@@ -143,7 +143,7 @@ await sdk.connectWithLicenseKey(
 
 **For authorized users:**
 - 📧 Email: support@kgiton.com
-- 🔒 Security: security@kgiton.com
+- 🔒 Security: support@kgiton.com
 - 🌐 Website: https://kgiton.com
 
 **For licensing:**
