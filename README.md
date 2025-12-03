@@ -13,16 +13,14 @@ Official Flutter SDK for integrating with KGiTON BLE scale devices.
 
 ## 📖 Documentation
 
-**Complete documentation available at:** [`/flutter/docs/`](../docs/)
-
 ### Quick Links
 
-- 📘 [Overview & Comparison](../docs/01-overview.md) - SDK selection guide
-- 📗 [Installation Guide](../docs/02-installation.md) - Platform setup
-- 📙 [Flutter SDK Guide](../docs/03-flutter-sdk-guide.md) - Usage guide
-- 📕 [API Reference](../docs/04-flutter-sdk-api.md) - Complete API docs
-- 📔 [Complete Index](../docs/COMPLETE_DOCUMENTATION_INDEX.md) - Quick reference
-- 🔧 [Integration Guide](../docs/integration-guides/FLUTTER-PACKAGE-SDK-INTEGRATION.md) - Step-by-step integration
+- 📘 [Authorization Guide](AUTHORIZATION.md) - How to obtain license
+- 📗 [Security Policy](SECURITY.md) - Security and vulnerability reporting
+- 📙 [Project Structure](STRUCTURE.md) - SDK organization
+- 📕 [Quick Reference](QUICK_REFERENCE.md) - Quick start guide
+- 📔 [Changelog](CHANGELOG.md) - Version history
+- 🔧 [Example App](example/) - Complete working example
 
 ## Features
 
@@ -57,9 +55,7 @@ dependencies:
   kgiton_sdk:
     git:
       url: https://github.com/kuldii/flutter-kgiton-sdk.git
-      path: flutter/kgiton_sdk
       # Use provided access token if private repository
-  permission_handler: ^11.4.0
 ```
 
 ### Platform Configuration
@@ -107,11 +103,11 @@ sdk.connectionStateStream.listen((state) {
 });
 
 // Scan for devices
-await sdk.startScan(timeout: Duration(seconds: 15));
+await sdk.scanForDevices(timeout: Duration(seconds: 15));
 
-// Connect to device
-await sdk.connect(
-  device: selectedDevice,
+// Connect to device with license key
+await sdk.connectWithLicenseKey(
+  deviceId: selectedDevice.id,
   licenseKey: 'YOUR-LICENSE-KEY-HERE',
 );
 
@@ -122,17 +118,12 @@ await sdk.triggerBuzzer('BEEP');
 await sdk.disconnect();
 ```
 
-### Complete Integration
+### Additional Resources
 
-For complete step-by-step integration with full UI examples, see:
-- **[Flutter Package SDK Integration Guide](../docs/integration-guides/FLUTTER-PACKAGE-SDK-INTEGRATION.md)**
-
-Includes:
-- Complete platform configuration
-- Permission handling service
-- Full screen implementations (Scan, Connection, Weight Display)
-- Error handling patterns
-- Testing and troubleshooting
+- 📚 [Example App](example/) - Complete working example with Material Design 3 UI
+- 📋 [STRUCTURE.md](STRUCTURE.md) - Detailed project structure
+- 🔐 [AUTHORIZATION.md](AUTHORIZATION.md) - Licensing information
+- 🛡️ [SECURITY.md](SECURITY.md) - Security policy
 
 ## Example App
 
@@ -148,12 +139,11 @@ flutter run
 ## Architecture
 
 This SDK uses:
-- **BLE Library**: flutter_blue_plus
+- **BLE Library**: kgiton_ble_sdk (internal, MIT licensed)
 - **Platform**: iOS + Android
 - **Language**: Pure Dart
 - **Pattern**: Stream-based reactive API
-
-For Android-only apps with better performance, see [Native SDK](../kgiton_sdk_native/).
+- **Size**: ~52KB source code
 
 ## API Overview
 
@@ -172,18 +162,21 @@ For Android-only apps with better performance, see [Native SDK](../kgiton_sdk_na
 - `triggerBuzzer()` - Control buzzer
 
 **Properties:**
-- `isScanning` - Scan status
+- `connectionState` - Current connection state
 - `isConnected` - Connection status
+- `isAuthenticated` - Authentication status
 - `connectedDevice` - Current device
+- `availableDevices` - List of discovered devices
 
-See [API Reference](../docs/04-flutter-sdk-api.md) for complete details.
+See inline documentation in source code for complete API details.
 
 ## Support
 
-- 📚 [Full Documentation](../docs/)
-- 📖 [Integration Guide](../docs/integration-guides/FLUTTER-PACKAGE-SDK-INTEGRATION.md)
+For authorized users:
 - 🐛 [Report Issues](https://github.com/kuldii/flutter-kgiton-sdk/issues)
-- 📧 Email: support@kgiton.com
+- 📧 Technical Support: support@kgiton.com
+- 🔒 Security Issues: security@kgiton.com
+- 🌐 Website: https://kgiton.com
 
 ## License
 

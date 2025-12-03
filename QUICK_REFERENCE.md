@@ -45,7 +45,6 @@ dependencies:
   kgiton_sdk:
     git:
       url: https://github.com/kuldii/flutter-kgiton-sdk.git
-      path: flutter/kgiton_sdk
 ```
 
 ### 2. Import
