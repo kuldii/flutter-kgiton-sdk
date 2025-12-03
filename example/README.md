@@ -41,14 +41,54 @@ License key harus sesuai dengan yang di-set di firmware ESP32 Anda.
 - Device list
 - Buzzer controls
 
+## API Usage Examples
+
+### Initialize SDK
+```dart
+final sdk = KGiTONScaleService();
+```
+
+### Scan for Devices
+```dart
+await sdk.scanForDevices(timeout: Duration(seconds: 15));
+```
+
+### Connect with License Key
+```dart
+final response = await sdk.connectWithLicenseKey(
+  deviceId: device.id,
+  licenseKey: licenseKey,
+);
+```
+
+### Listen to Weight Data
+```dart
+sdk.weightStream.listen((weight) {
+  print('Weight: ${weight.displayWeight}');
+});
+```
+
+### Control Buzzer
+```dart
+await sdk.triggerBuzzer('BEEP'); // BEEP, BUZZ, LONG, OFF
+```
+
+### Disconnect
+```dart
+await sdk.disconnect();
+// OR with license key:
+await sdk.disconnectWithLicenseKey(licenseKey);
+```
+
 ## Usage Flow
 
 1. **Input License Key** - Masukkan license key yang valid
-2. **Scan Devices** - Tap "Scan Devices" untuk mencari timbangan
+2. **Start Scan** - Tap tombol Bluetooth untuk scan devices
 3. **Select Device** - Pilih device dari list yang muncul
-4. **Connected** - Setelah connected, data berat akan muncul realtime
-5. **Buzzer Control** - Gunakan button untuk control buzzer
-6. **Disconnect** - Tap "Disconnect" untuk memutus koneksi
+4. **Auto-Connect** - Otomatis connect dengan license key
+5. **View Weight** - Data berat muncul realtime setelah authenticated
+6. **Control Buzzer** - Gunakan button untuk control buzzer
+7. **Disconnect** - Tap floating button merah untuk disconnect
 
 ## Troubleshooting
 
@@ -92,6 +132,31 @@ Menggunakan StatefulWidget dengan StreamListener untuk reactive updates dari SDK
 ### Error Handling
 Menggunakan SnackBar untuk menampilkan error dan success messages.
 
+## Platform Requirements
+
+### Android
+Minimum SDK: API 21 (Android 5.0)
+
+Permissions in `AndroidManifest.xml`:
+```xml
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+```
+
+### iOS
+Minimum Version: iOS 12.0
+
+Permissions in `Info.plist`:
+```xml
+<key>NSBluetoothAlwaysUsageDescription</key>
+<string>Need Bluetooth to connect to scale</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Need location for Bluetooth scanning</string>
+```
+
 ## Learn More
 
-Lihat README utama di parent directory untuk dokumentasi lengkap SDK.
+Lihat [README.md](../README.md) di parent directory untuk dokumentasi lengkap SDK.
+
+For licensing information, see [AUTHORIZATION.md](../AUTHORIZATION.md).

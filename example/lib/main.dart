@@ -13,7 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'KGiTON SDK Example',
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), useMaterial3: true),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
       home: const ScalePage(),
     );
   }
@@ -160,12 +164,14 @@ class _ScalePageState extends State<ScalePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('KGiTON SDK Example'),
+        centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(_isScanning ? Icons.bluetooth_searching : Icons.bluetooth),
-            onPressed: _isScanning ? _stopScan : _startScan,
-            tooltip: _isScanning ? 'Stop Scan' : 'Start Scan',
-          ),
+          if (!_state.isConnected)
+            IconButton(
+              icon: Icon(_isScanning ? Icons.bluetooth_searching : Icons.bluetooth),
+              onPressed: _isScanning ? _stopScan : _startScan,
+              tooltip: _isScanning ? 'Stop Scan' : 'Start Scan',
+            ),
         ],
       ),
       body: _state.isConnected ? _buildConnectedView() : _buildDisconnectedView(),

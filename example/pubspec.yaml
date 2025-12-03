@@ -11,13 +11,14 @@ dependencies:
   flutter:
     sdk: flutter
   
-  # KGiTON SDK
+  # KGiTON SDK - Local development
   kgiton_sdk:
     path: ../
-    # OR from GitHub:
-    # git:
-    #   url: https://github.com/kuldii/flutter-kgiton-sdk.git
-    #   path: flutter/kgiton_sdk
+  
+  # For production use (with authorization):
+  # kgiton_sdk:
+  #   git:
+  #     url: https://github.com/kuldii/flutter-kgiton-sdk.git
   
   # Permissions
   permission_handler: ^11.4.0
