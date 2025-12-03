@@ -134,10 +134,10 @@ The KGiTON SDK installs these dependencies:
 
 ```yaml
 dependencies:
-  # Core BLE functionality
+  # Core BLE functionality (Proprietary - requires access)
   kgiton_ble_sdk:
     git:
-      url: https://github.com/kuldii/flutter-kgiton-ble-sdk.git
+      url: https://github.com/kuldii/flutter-ble-sdk.git
   
   # Logging
   logger: ^2.5.0

@@ -113,10 +113,10 @@ Apple's mobile operating system. Minimum version supported: 12.0.
 Company name and brand for BLE scale devices and SDKs.
 
 **kgiton_ble_sdk**  
-Low-level BLE communication library (MIT licensed) used internally by kgiton_sdk.
+Low-level BLE communication library (proprietary) used internally by kgiton_sdk.
 
 **kgiton_sdk**  
-High-level proprietary SDK for integrating KGiTON scale devices.
+High-level proprietary SDK for integrating KGiTON scale devices. Requires explicit authorization.
 
 ---
 

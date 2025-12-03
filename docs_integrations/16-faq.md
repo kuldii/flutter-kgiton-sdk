@@ -32,15 +32,15 @@ Common questions and answers about the KGiTON SDK.
 
 ### Q: Is the SDK open source?
 
-**A:** No. The KGiTON SDK is proprietary commercial software owned by PT KGiTON. Use requires explicit authorization.
+**A:** No. Both **kgiton_sdk** and **kgiton_ble_sdk** are proprietary commercial software owned by PT KGiTON. Use requires explicit authorization and license key from PT KGiTON.
 
 ### Q: What's the difference between kgiton_sdk and kgiton_ble_sdk?
 
 **A:**
 - **kgiton_sdk**: High-level SDK with business logic (license auth, weight processing, etc.) - Proprietary
-- **kgiton_ble_sdk**: Low-level BLE communication library - MIT licensed, used internally
+- **kgiton_ble_sdk**: Low-level BLE communication library - Proprietary, used internally by kgiton_sdk
 
-You should use **kgiton_sdk** for your applications.
+**Both are proprietary commercial software owned by PT KGiTON**. You should use **kgiton_sdk** for your applications.
 
 ### Q: Can I use the SDK in multiple projects?
 

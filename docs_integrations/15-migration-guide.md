@@ -8,8 +8,8 @@ Guide for migrating between different versions of KGiTON SDK.
 
 | Version | Release Date | Status | Breaking Changes |
 |---------|-------------|--------|------------------|
-| 1.1.0   | 2025-01     | Current | No              |
-| 1.0.0   | 2024-12     | Stable  | -               |
+| 1.1.0   | Dec 2025    | Current | No              |
+| 1.0.0   | Nov 2025    | Stable  | -               |
 
 ---
 

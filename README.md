@@ -31,7 +31,7 @@ Official Flutter SDK for integrating with KGiTON BLE scale devices.
 - ✅ Buzzer control (BEEP, BUZZ, LONG, OFF)
 - ✅ Connection state management
 - ✅ Type-safe API with comprehensive error handling
-- ✅ Built on kgiton_ble_sdk (MIT licensed)
+- ✅ Built on kgiton_ble_sdk (proprietary)
 
 ## Quick Start
 
@@ -139,7 +139,7 @@ flutter run
 ## Architecture
 
 This SDK uses:
-- **BLE Library**: kgiton_ble_sdk (internal, MIT licensed)
+- **BLE Library**: kgiton_ble_sdk (internal, proprietary)
 - **Platform**: iOS + Android
 - **Language**: Pure Dart
 - **Pattern**: Stream-based reactive API

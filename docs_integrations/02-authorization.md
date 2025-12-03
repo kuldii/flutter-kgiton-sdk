@@ -363,7 +363,7 @@ To upgrade from Development to Commercial:
    - Exceeding device/user limits
 
 3. **Redistribution**
-   - Including SDK in open-source projects
+   - Including SDK in unauthorized open-source projects
    - Sharing SDK source code
 
 ### Consequences
