@@ -1,0 +1,39 @@
+name: kgiton_sdk
+description: KGiTON BLE Scale SDK - Flutter package untuk integrasi timbangan berbasis ESP32 via Bluetooth Low Energy
+version: 1.1.0
+homepage: https://github.com/kuldii/flutter-kgiton-sdk
+repository: https://github.com/kuldii/flutter-kgiton-sdk
+issue_tracker: https://github.com/kuldii/flutter-kgiton-sdk/issues
+publish_to: none
+
+environment:
+  sdk: ^3.10.0
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # BLE Communication
+  kgiton_ble_sdk:
+    git:
+      url: https://github.com/kuldii/flutter-ble-sdk.git
+  
+  # Logging
+  logger: ^2.5.0
+  
+  # Utilities
+  meta: ^1.15.0
+  
+  # Local Storage
+  shared_preferences: ^2.3.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+# Package configuration
+flutter:
+  # This package is a plugin package (not a full app)
+  # It does not contain any UI
