@@ -11,7 +11,7 @@ Official Flutter SDK for integrating with KGiTON BLE scale devices.
 
 > **⚠️ PROPRIETARY SOFTWARE**: This SDK is commercial software owned by PT KGiTON. Use requires explicit authorization. See [AUTHORIZATION.md](AUTHORIZATION.md) for licensing information.
 
-## 🆕 What's New in v1.1.0
+## � What's New in v1.1.0
 
 - ✅ **Auto-Clear Cart**: `processCart()` now automatically clears cart after successful transaction
 - ✅ **Payment Method**: Optional `paymentMethod` parameter for checkout
