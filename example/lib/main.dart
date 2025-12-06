@@ -36,6 +36,7 @@ class _ScalePageState extends State<ScalePage> {
   WeightData? _weight;
   ScaleConnectionState _state = ScaleConnectionState.disconnected;
   bool _isScanning = false;
+  bool _autoStopOnFound = true; // Auto-stop scan setelah menemukan device
 
   @override
   void initState() {
@@ -70,7 +71,7 @@ class _ScalePageState extends State<ScalePage> {
   Future<void> _startScan() async {
     setState(() => _isScanning = true);
     try {
-      await _sdk.scanForDevices(timeout: const Duration(seconds: 15));
+      await _sdk.scanForDevices(timeout: const Duration(seconds: 15), autoStopOnFound: _autoStopOnFound);
     } catch (e) {
       _showError('Scan failed: $e');
     } finally {
@@ -163,12 +164,24 @@ class _ScalePageState extends State<ScalePage> {
         title: const Text('KGiTON SDK Example'),
         centerTitle: true,
         actions: [
-          if (!_state.isConnected)
+          if (!_state.isConnected) ...[
+            PopupMenuButton<bool>(
+              icon: const Icon(Icons.settings),
+              onSelected: (value) {
+                setState(() => _autoStopOnFound = value);
+                _showSuccess(value ? 'Auto-stop enabled' : 'Auto-stop disabled');
+              },
+              itemBuilder: (context) => [
+                CheckedPopupMenuItem<bool>(value: true, checked: _autoStopOnFound, child: const Text('Auto-stop on found')),
+                CheckedPopupMenuItem<bool>(value: false, checked: !_autoStopOnFound, child: const Text('Continuous scan')),
+              ],
+            ),
             IconButton(
               icon: Icon(_isScanning ? Icons.bluetooth_searching : Icons.bluetooth),
               onPressed: _isScanning ? _stopScan : _startScan,
               tooltip: _isScanning ? 'Stop Scan' : 'Start Scan',
             ),
+          ],
         ],
       ),
       body: _state.isConnected ? _buildConnectedView() : _buildDisconnectedView(),

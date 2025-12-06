@@ -11,14 +11,13 @@ Official Flutter SDK for integrating with KGiTON BLE scale devices.
 
 > **⚠️ PROPRIETARY SOFTWARE**: This SDK is commercial software owned by PT KGiTON. Use requires explicit authorization. See [AUTHORIZATION.md](AUTHORIZATION.md) for licensing information.
 
-## 🎉 What's New in v1.1.0
+## Features Overview
 
-- ✅ **Payment Method**: Optional `paymentMethod` parameter for checkout
-- ✅ **Order Notes**: Optional `notes` parameter for checkout
-- ✅ **Enhanced Models**: API models now support nullable fields from backend
-- ✅ **Better Debugging**: Comprehensive error logging for API parsing issues
-
-See [CHANGELOG.md](CHANGELOG.md) for full details.
+- ✅ **Auto-Stop Scan**: Scan otomatis berhenti setelah menemukan device (hemat battery!)
+- ✅ **Smart Connect**: Scan otomatis stop saat connect ke device
+- ✅ **Optimized Performance**: Battery efficient dengan intelligent scan management
+- ✅ **Memory Safe**: Proper cleanup untuk mencegah memory leak
+- ✅ **Complete API**: REST API integration untuk backend KGiTON
 
 ## 📖 Documentation
 
@@ -145,10 +144,14 @@ sdk.connectionStateStream.listen((state) {
   print('State: ${state.name}');
 });
 
-// Scan for devices
-await sdk.scanForDevices(timeout: Duration(seconds: 15));
+// Scan for devices (with auto-stop for better performance!)
+await sdk.scanForDevices(
+  timeout: Duration(seconds: 15),
+  autoStopOnFound: true, // 🔥 Hemat battery & memory!
+);
 
 // Connect to device with license key
+// Scan will automatically stop when connecting!
 await sdk.connectWithLicenseKey(
   deviceId: selectedDevice.id,
   licenseKey: 'YOUR-LICENSE-KEY-HERE',

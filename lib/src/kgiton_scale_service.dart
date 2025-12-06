@@ -95,10 +95,17 @@ class KGiTONScaleService {
   // PUBLIC METHODS - SCANNING
   // ============================================
 
+  // Timer untuk debounce device processing
+  Timer? _deviceProcessingTimer;
+  List<BleDevice>? _pendingDevices;
+
   /// Scan untuk menemukan perangkat timbangan
   ///
+  /// [timeout] - Durasi maksimal scan (default: 10 detik)
+  /// [autoStopOnFound] - Otomatis stop scan setelah menemukan device (default: false)
+  ///
   /// Throws [BLEConnectionException] jika gagal memulai scan
-  Future<void> scanForDevices({Duration? timeout}) async {
+  Future<void> scanForDevices({Duration? timeout, bool autoStopOnFound = false}) async {
     if (_connectionState == ScaleConnectionState.scanning) {
       _log('Already scanning', level: Level.warning);
       return;
@@ -109,15 +116,23 @@ class KGiTONScaleService {
     _devicesController.add([]);
 
     final scanTimeout = timeout ?? BLEConstants.scanTimeout;
-    _log('Starting BLE scan for ${BLEConstants.deviceName} (timeout: ${scanTimeout.inSeconds}s)');
+    _log('Starting BLE scan for ${BLEConstants.deviceName} (timeout: ${scanTimeout.inSeconds}s, autoStop: $autoStopOnFound)');
 
     try {
       _scanSubscription = _bleSdk.scanResults.listen(
         (devices) {
           _log('Received ${devices.length} total device(s) from BLE scan', level: Level.debug);
 
-          // Process devices asynchronously without blocking the listener
-          _processScannedDevices(devices);
+          // Debounce device processing - wait 300ms before processing
+          // This prevents excessive processing when multiple devices are found rapidly
+          _pendingDevices = devices;
+          _deviceProcessingTimer?.cancel();
+          _deviceProcessingTimer = Timer(const Duration(milliseconds: 300), () {
+            if (_pendingDevices != null) {
+              _processScannedDevices(_pendingDevices!, autoStopOnFound: autoStopOnFound);
+              _pendingDevices = null;
+            }
+          });
         },
         onError: (error) {
           _log('Scan error: $error', level: Level.error);
@@ -147,7 +162,7 @@ class KGiTONScaleService {
   }
 
   /// Process scanned devices with license key mapping
-  Future<void> _processScannedDevices(List<BleDevice> devices) async {
+  Future<void> _processScannedDevices(List<BleDevice> devices, {bool autoStopOnFound = false}) async {
     _availableDevices.clear();
 
     // Load license key map untuk mapping ke device
@@ -171,13 +186,31 @@ class KGiTONScaleService {
     _devicesController.add(List.from(_availableDevices));
     if (_availableDevices.isNotEmpty) {
       _log('Found ${_availableDevices.length} KGiTON device(s)', level: Level.info);
+
+      // Auto stop scan jika diminta dan ada device yang ditemukan
+      if (autoStopOnFound && _connectionState == ScaleConnectionState.scanning) {
+        _log('Auto-stopping scan - found device(s)', level: Level.info);
+        stopScan();
+      }
     }
   }
 
   /// Stop scanning
   void stopScan() {
+    // Cancel debounce timer
+    _deviceProcessingTimer?.cancel();
+    _deviceProcessingTimer = null;
+    _pendingDevices = null;
+
+    // Cancel scan subscription
     _scanSubscription?.cancel();
-    _bleSdk.stopScan();
+    _scanSubscription = null;
+
+    try {
+      _bleSdk.stopScan();
+    } catch (e) {
+      _log('Error stopping BLE scan: $e', level: Level.warning);
+    }
 
     if (_connectionState == ScaleConnectionState.scanning) {
       _updateConnectionState(ScaleConnectionState.disconnected);
@@ -200,6 +233,12 @@ class KGiTONScaleService {
   /// Throws [LicenseKeyException] jika license key invalid
   Future<ControlResponse> connectWithLicenseKey({required String deviceId, required String licenseKey}) async {
     _log('Connecting with license key to device: $deviceId');
+
+    // Stop scan jika masih berjalan
+    if (_connectionState == ScaleConnectionState.scanning) {
+      _log('Stopping scan before connecting', level: Level.info);
+      stopScan();
+    }
 
     // Validasi device ada dalam daftar
     if (!_availableDevices.any((d) => d.id == deviceId)) {
@@ -260,6 +299,12 @@ class KGiTONScaleService {
   /// Disconnect tanpa license key (force disconnect)
   Future<void> disconnect() async {
     _log('Force disconnect');
+
+    // Make sure to stop any ongoing scans
+    if (_connectionState == ScaleConnectionState.scanning) {
+      stopScan();
+    }
+
     await _disconnectDevice();
   }
 
@@ -626,6 +671,11 @@ class KGiTONScaleService {
   /// Dispose - hanya panggil saat app closing
   void dispose() {
     _log('Disposing KGiTON Scale Service');
+
+    // Cancel debounce timer
+    _deviceProcessingTimer?.cancel();
+    _deviceProcessingTimer = null;
+    _pendingDevices = null;
 
     stopScan();
     _disconnectDevice();
