@@ -6,7 +6,7 @@ class User {
   User({required this.id, required this.email});
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(id: json['id'] as String, email: json['email'] as String);
+    return User(id: (json['id'] as String?) ?? '', email: (json['email'] as String?) ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -27,10 +27,10 @@ class UserProfile {
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
-      userId: json['user_id'] as String,
-      role: json['role'] as String,
-      entityType: json['entity_type'] as String,
-      name: json['name'] as String,
+      userId: (json['user_id'] as String?) ?? '',
+      role: (json['role'] as String?) ?? 'user',
+      entityType: (json['entity_type'] as String?) ?? 'individual',
+      name: (json['name'] as String?) ?? 'Unknown',
       fullName: json['full_name'] as String?,
       companyName: json['company_name'] as String?,
     );
@@ -94,17 +94,14 @@ class CurrentUserData {
     // Handle flat structure where user and profile data are mixed
     // Try to extract user fields (id, email)
     if (json.containsKey('id') && json.containsKey('email')) {
-      final user = User(
-        id: json['id'] as String,
-        email: json['email'] as String,
-      );
+      final user = User(id: (json['id'] as String?) ?? '', email: (json['email'] as String?) ?? '');
 
-      // Extract profile fields
+      // Extract profile fields with safe defaults
       final profile = UserProfile(
-        userId: json['user_id'] as String? ?? json['id'] as String,
-        role: json['role'] as String,
-        entityType: json['entity_type'] as String,
-        name: json['name'] as String,
+        userId: (json['user_id'] as String?) ?? (json['id'] as String?) ?? '',
+        role: (json['role'] as String?) ?? 'user',
+        entityType: (json['entity_type'] as String?) ?? 'individual',
+        name: (json['name'] as String?) ?? 'Unknown',
         fullName: json['full_name'] as String?,
         companyName: json['company_name'] as String?,
       );
