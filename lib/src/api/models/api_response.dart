@@ -11,7 +11,7 @@ class ApiResponse<T> {
     return ApiResponse<T>(
       success: json['success'] as bool,
       message: json['message'] as String,
-      data: json['data'] != null && fromJsonT != null ? fromJsonT(json['data']) : json['data'] as T?,
+      data: json['data'] != null && fromJsonT != null ? fromJsonT(json['data']) : (json['data'] as T?),
       details: json['details'],
     );
   }
@@ -36,7 +36,12 @@ class Pagination {
   Pagination({required this.total, required this.page, required this.limit, required this.totalPages});
 
   factory Pagination.fromJson(Map<String, dynamic> json) {
-    return Pagination(total: json['total'] as int, page: json['page'] as int, limit: json['limit'] as int, totalPages: json['totalPages'] as int);
+    return Pagination(
+      total: (json['total'] as num?)?.toInt() ?? 0,
+      page: (json['page'] as num?)?.toInt() ?? 1,
+      limit: (json['limit'] as num?)?.toInt() ?? 10,
+      totalPages: (json['totalPages'] as num?)?.toInt() ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {

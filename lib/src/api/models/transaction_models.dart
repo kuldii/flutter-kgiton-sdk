@@ -22,9 +22,9 @@ class Transaction {
     return Transaction(
       id: json['id'] as String,
       licenseId: json['license_id'] as String,
-      subtotal: (json['subtotal'] as num).toDouble(),
-      processingFee: (json['processing_fee'] as num).toDouble(),
-      total: (json['total'] as num).toDouble(),
+      subtotal: ((json['subtotal'] as num?) ?? 0).toDouble(),
+      processingFee: ((json['processing_fee'] as num?) ?? 0).toDouble(),
+      total: ((json['total'] as num?) ?? 0).toDouble(),
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -72,9 +72,9 @@ class TransactionDetailItem {
       itemId: json['item_id'] as String,
       itemName: json['item_name'] as String,
       unit: json['unit'] as String,
-      quantity: (json['quantity'] as num).toDouble(),
-      unitPrice: (json['unit_price'] as num).toDouble(),
-      totalPrice: (json['total_price'] as num).toDouble(),
+      quantity: ((json['quantity'] as num?) ?? 0).toDouble(),
+      unitPrice: ((json['unit_price'] as num?) ?? 0).toDouble(),
+      totalPrice: ((json['total_price'] as num?) ?? 0).toDouble(),
       notes: json['notes'] as String?,
     );
   }
