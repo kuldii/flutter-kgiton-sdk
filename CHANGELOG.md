@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `KgitonTransactionService` - List transactions, get details, summary
 - `KgitonAdminSettingsService` - Get/update system settings
 
-### Added - Features
+### Added - BLE Features & Android 10+ Support
 - ✅ Automatic JWT token management
 - ✅ Token persistence in local storage
 - ✅ Comprehensive error handling with specific exception types
@@ -55,9 +55,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✅ Multi-branch support via multiple licenses per owner
 - ✅ Cart processing with automatic fee calculation
 - ✅ Type-safe API with full type inference
+- ✅ **Robust BLE permission handling untuk Android 10+**
+- ✅ **`PermissionHelper` class dengan version-specific logic**
+- ✅ **Automatic location service checking untuk Android 10-11**
+- ✅ **Native layer permission checks di Kotlin BleManager**
+- ✅ **Clear error messages: PERMISSION_DENIED, LOCATION_DISABLED**
 
 ### Dependencies
 - Added: `http: ^1.2.0` - HTTP client for API calls
+- Added: `permission_handler: ^11.3.1` - Permission handling untuk BLE
 - Required: `uuid: ^4.0.0` - For generating cart IDs (in consumer app)
 
 ### Documentation

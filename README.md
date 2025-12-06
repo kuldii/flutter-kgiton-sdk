@@ -79,29 +79,45 @@ dependencies:
 
 **Android** (`android/app/src/main/AndroidManifest.xml`):
 ```xml
-<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+<!-- CRITICAL: Include ALL these permissions for Android 10+ support -->
+<uses-permission android:name="android.permission.BLUETOOTH" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" 
+    android:usesPermissionFlags="neverForLocation" />
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+<!-- REQUIRED for Android 10-11 BLE scanning -->
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 ```
+
+> 🚨 **Android 10 users**: BLE scanning tidak akan bekerja tanpa `ACCESS_FINE_LOCATION` dan Location Service aktif. 
+> Baca [ANDROID_10_BLE_TROUBLESHOOTING.md](docs_integrations/ANDROID_10_BLE_TROUBLESHOOTING.md) untuk panduan lengkap.
 
 **iOS** (`ios/Runner/Info.plist`):
 ```xml
 <key>NSBluetoothAlwaysUsageDescription</key>
 <string>Need Bluetooth to connect to scale</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Need location to discover Bluetooth devices</string>
 ```
+
+> 📖 **Untuk panduan lengkap Android 10**, lihat [ANDROID_10_BLE_TROUBLESHOOTING.md](docs_integrations/ANDROID_10_BLE_TROUBLESHOOTING.md)
 
 ### Basic Usage - BLE Scale
 
 ```dart
 import 'package:kgiton_sdk/kgiton_sdk.dart';
-import 'package:permission_handler/permission_handler.dart';
 
-// Request permissions
-await Permission.bluetoothScan.request();
-await Permission.bluetoothConnect.request();
-await Permission.location.request();
+// 1. Request permissions (SDK built-in helper)
+final granted = await PermissionHelper.requestBLEPermissions();
+if (!granted) {
+  final errorMsg = await PermissionHelper.getPermissionErrorMessage();
+  print(errorMsg); // Shows specific error for Android 10, etc.
+  return;
+}
 
-// Initialize SDK
+// 2. Initialize SDK
 final sdk = KGiTONScaleService();
 
 // Listen to devices

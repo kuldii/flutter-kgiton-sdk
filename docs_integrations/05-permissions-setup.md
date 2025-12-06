@@ -33,28 +33,48 @@ Proceed or Show Rationale
 
 ---
 
-## 📦 Add permission_handler Package
+## 🚨 **CRITICAL: Android 10 Users**
 
-The recommended way to handle permissions is using the `permission_handler` package.
+**Android 10 (API 29) memerlukan special handling!**
 
-### Step 1: Add Dependency
+Jika aplikasi Anda tidak bisa scan Bluetooth di Android 10, baca dokumentasi khusus:
+- [**ANDROID_10_BLE_TROUBLESHOOTING.md**](./ANDROID_10_BLE_TROUBLESHOOTING.md)
 
-Add to `pubspec.yaml`:
+Masalah umum:
+- ❌ Location permission tidak di-request
+- ❌ Location service tidak aktif
+- ❌ Menggunakan ACCESS_COARSE_LOCATION saja (harus FINE_LOCATION)
 
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  kgiton_sdk:
-    git: ...
-  permission_handler: ^11.4.0  # Or latest version
+SDK versi terbaru sudah include fix untuk Android 10. Lihat dokumentasi di atas untuk implementasi yang benar.
+
+---
+
+## 📦 Permission Handler (Built-in)
+
+**Good news!** KGiTON SDK sudah menyertakan `PermissionHelper` untuk handling permissions dengan benar di semua versi Android.
+
+### Quick Start - Using Built-in Helper
+
+```dart
+import 'package:kgiton_sdk/kgiton_sdk.dart';
+
+// Request permissions
+final granted = await PermissionHelper.requestBLEPermissions();
+
+if (!granted) {
+  final errorMsg = await PermissionHelper.getPermissionErrorMessage();
+  print(errorMsg);
+}
+
+// Check permissions
+final hasPermission = await PermissionHelper.checkBLEPermissions();
+
+// Get detailed status (untuk debugging)
+final status = await PermissionHelper.getPermissionStatus();
+print(status); // Shows all permission details
 ```
 
-### Step 2: Install
-
-```bash
-flutter pub get
-```
+No need to add `permission_handler` package manually - it's already included in KGiTON SDK dependencies!
 
 ---
 

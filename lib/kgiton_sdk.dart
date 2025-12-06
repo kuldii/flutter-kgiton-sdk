@@ -21,6 +21,9 @@ export 'src/constants/ble_constants.dart';
 // BLE Exceptions
 export 'src/exceptions/kgiton_exceptions.dart';
 
+// Utils
+export 'src/utils/permission_helper.dart';
+
 // ==================== API Services ====================
 // API Client & Main Service
 export 'src/api/kgiton_api_client.dart';
