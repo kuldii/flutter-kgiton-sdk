@@ -198,11 +198,51 @@ final item = await apiService.owner.createItem(
   price: 15000,
 );
 
-// Soft delete (set is_active = false)
+// Delete item permanently (removes from database)
 await apiService.owner.deleteItem(item.id);
 
-// Permanent delete (remove from database)
-await apiService.owner.deleteItemPermanent(item.id);
+// Cart API - Scale App Use Case (Multiple Weighings)
+// Use forceNew: true for creating separate entries
+await apiService.cart.addItemToCart(
+  AddCartRequest(
+    licenseKey: 'LICENSE-KEY',
+    itemId: item.id,
+    quantity: 0.5,
+    notes: 'First weighing',
+    forceNew: true, // ✅ Creates new entry
+  ),
+);
+
+await apiService.cart.addItemToCart(
+  AddCartRequest(
+    licenseKey: 'LICENSE-KEY',
+    itemId: item.id,
+    quantity: 0.3,
+    notes: 'Second weighing',
+    forceNew: true, // ✅ Creates another entry (same item)
+  ),
+);
+
+// Cart API - E-commerce Use Case (Update Quantity)
+// Omit forceNew or set false to update existing
+await apiService.cart.addItemToCart(
+  AddCartRequest(
+    licenseKey: 'LICENSE-KEY',
+    itemId: item.id,
+    quantity: 2.0,
+    // No forceNew → updates existing if found
+  ),
+);
+
+// Get cart items
+final cartItems = await apiService.cart.getCartItems('LICENSE-KEY');
+
+// Get cart summary
+final summary = await apiService.cart.getCartSummary('LICENSE-KEY');
+print('Total: ${summary.totalItems} items, Rp ${summary.estimatedTotal}');
+
+// Clear cart after checkout
+await apiService.cart.clearCartAfterCheckout('LICENSE-KEY');
 ```
 
 ## API Overview
@@ -234,6 +274,7 @@ await apiService.owner.deleteItemPermanent(item.id);
 - `auth` - Authentication (login, register, logout)
 - `license` - License management (Super Admin)
 - `owner` - Owner operations (items, licenses)
+- `cart` - Cart management with forceNew support
 - `transaction` - Transaction management
 - `adminSettings` - Admin settings management
 
@@ -242,6 +283,7 @@ await apiService.owner.deleteItemPermanent(item.id);
 - Local storage persistence
 - Comprehensive error handling
 - Type-safe models
+- Cart API with multiple entries support (forceNew parameter)
 
 See [API Integration Guide](docs_integrations/18-api-integration-guide.md) for complete API documentation.
 
@@ -307,7 +349,7 @@ See [LICENSE](LICENSE) file for complete terms and conditions.
 
 ---
 
-**SDK Version:** 1.0.0  
+**SDK Version:** 1.2.0  
 **API Base URL:** `https://dev-api.kgiton.com`  
 **API Version:** `/api/v1`  
 **Platform:** iOS + Android  

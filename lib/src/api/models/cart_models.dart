@@ -102,8 +102,9 @@ class AddCartRequest {
   final double quantity;
   final int? quantityPcs;
   final String? notes;
+  final bool? forceNew;
 
-  AddCartRequest({required this.licenseKey, required this.itemId, required this.quantity, this.quantityPcs, this.notes});
+  AddCartRequest({required this.licenseKey, required this.itemId, required this.quantity, this.quantityPcs, this.notes, this.forceNew});
 
   Map<String, dynamic> toJson() {
     return {
@@ -112,6 +113,7 @@ class AddCartRequest {
       'quantity': quantity,
       if (quantityPcs != null) 'quantity_pcs': quantityPcs,
       if (notes != null) 'notes': notes,
+      if (forceNew != null) 'force_new': forceNew,
     };
   }
 

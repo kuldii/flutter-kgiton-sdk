@@ -203,51 +203,7 @@ class KgitonOwnerService {
     return response.data!;
   }
 
-  /// Delete an item (Soft Delete)
-  ///
-  /// This performs a **soft delete** by setting `is_active = false`.
-  /// The item will not appear in list queries but remains in the database.
-  ///
-  /// [itemId] - The item ID to delete
-  ///
-  /// Returns `true` if item was soft deleted successfully
-  ///
-  /// **Important:** After deleting an item, call [listAllItems] or [listItems]
-  /// to refresh your local data/UI state. The item will no longer appear
-  /// because backend filters by `is_active = true`.
-  ///
-  /// Example:
-  /// ```dart
-  /// // Soft delete item (set is_active = false)
-  /// final deleted = await ownerService.deleteItem(itemId);
-  ///
-  /// if (deleted) {
-  ///   // Refresh item list - soft deleted items won't appear
-  ///   final updatedItems = await ownerService.listAllItems();
-  ///   setState(() {
-  ///     items = updatedItems.items;
-  ///   });
-  /// }
-  /// ```
-  ///
-  /// **Note:** To permanently delete an item from database, use [deleteItemPermanent]
-  ///
-  /// Throws:
-  /// - [KgitonAuthenticationException] if not authenticated
-  /// - [KgitonNotFoundException] if item not found
-  /// - [KgitonAuthorizationException] if item doesn't belong to owner
-  /// - [KgitonApiException] for other errors
-  Future<bool> deleteItem(String itemId) async {
-    final response = await _client.delete(KgitonApiEndpoints.deleteItem(itemId), requiresAuth: true);
-
-    if (!response.success) {
-      throw Exception('Failed to delete item: ${response.message}');
-    }
-
-    return true;
-  }
-
-  /// Permanently delete an item (Hard Delete)
+  /// Delete an item permanently
   ///
   /// This performs a **permanent delete** by removing the item from the database.
   /// This action is **irreversible** and the item cannot be recovered.
@@ -265,7 +221,7 @@ class KgitonOwnerService {
   /// final confirm = await showDialog<bool>(
   ///   context: context,
   ///   builder: (context) => AlertDialog(
-  ///     title: Text('Permanently Delete?'),
+  ///     title: Text('Delete Item?'),
   ///     content: Text('This action cannot be undone!'),
   ///     actions: [
   ///       TextButton(
@@ -283,7 +239,7 @@ class KgitonOwnerService {
   ///
   /// if (confirm == true) {
   ///   try {
-  ///     final deleted = await ownerService.deleteItemPermanent(itemId);
+  ///     final deleted = await ownerService.deleteItem(itemId);
   ///
   ///     if (deleted) {
   ///       // Refresh item list
@@ -291,7 +247,7 @@ class KgitonOwnerService {
   ///       setState(() {
   ///         items = updatedItems.items;
   ///       });
-  ///       showSuccess('Item permanently deleted');
+  ///       showSuccess('Item deleted successfully');
   ///     }
   ///   } catch (e) {
   ///     showError('Failed to delete: $e');
@@ -304,11 +260,11 @@ class KgitonOwnerService {
   /// - [KgitonNotFoundException] if item not found
   /// - [KgitonAuthorizationException] if item doesn't belong to owner
   /// - [KgitonApiException] for other errors
-  Future<bool> deleteItemPermanent(String itemId) async {
+  Future<bool> deleteItem(String itemId) async {
     final response = await _client.delete(KgitonApiEndpoints.deletePermanentItem(itemId), requiresAuth: true);
 
     if (!response.success) {
-      throw Exception('Failed to permanently delete item: ${response.message}');
+      throw Exception('Failed to delete item: ${response.message}');
     }
 
     return true;

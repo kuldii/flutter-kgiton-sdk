@@ -53,8 +53,50 @@ class KgitonCartService {
   ///
   /// Returns the created or updated [CartItem]
   ///
-  /// Note: If item with same user_id, license_key, and item_id already exists,
-  /// it will be updated instead of creating a new cart item.
+  /// Behavior with [forceNew] parameter:
+  /// - `forceNew: true` → Always create new entry (ideal for scale app with multiple weighings)
+  /// - `forceNew: false` or `null` → Update existing if found, create new if not exists (default behavior)
+  ///
+  /// Use Cases:
+  /// - **Scale App**: Use `forceNew: true` to create new entry for each weighing,
+  ///   allowing users to see history of multiple weighings for the same item.
+  /// - **E-commerce App**: Use `forceNew: false` or omit parameter to update
+  ///   quantity of existing cart item.
+  ///
+  /// Example:
+  /// ```dart
+  /// // Scale app - multiple weighings
+  /// await addItemToCart(AddCartRequest(
+  ///   licenseKey: 'ABC123',
+  ///   itemId: 'orange-uuid',
+  ///   quantity: 0.5,
+  ///   notes: 'First weighing',
+  ///   forceNew: true, // Creates new entry
+  /// ));
+  ///
+  /// await addItemToCart(AddCartRequest(
+  ///   licenseKey: 'ABC123',
+  ///   itemId: 'orange-uuid',
+  ///   quantity: 0.3,
+  ///   notes: 'Second weighing',
+  ///   forceNew: true, // Creates another new entry
+  /// ));
+  /// // Result: 2 separate cart entries for oranges
+  ///
+  /// // E-commerce app - update quantity
+  /// await addItemToCart(AddCartRequest(
+  ///   licenseKey: 'ABC123',
+  ///   itemId: 'apple-uuid',
+  ///   quantity: 2.0,
+  /// )); // Creates new entry
+  ///
+  /// await addItemToCart(AddCartRequest(
+  ///   licenseKey: 'ABC123',
+  ///   itemId: 'apple-uuid',
+  ///   quantity: 3.0,
+  /// )); // Updates quantity to 3.0
+  /// // Result: 1 cart entry with updated quantity
+  /// ```
   ///
   /// Throws:
   /// - [KgitonAuthenticationException] if not authenticated

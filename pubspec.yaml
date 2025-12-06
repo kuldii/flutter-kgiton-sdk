@@ -1,6 +1,6 @@
 name: kgiton_sdk
 description: KGiTON SDK - Flutter package untuk integrasi timbangan BLE dan API backend KGiTON dengan scan optimization
-version: 1.0.0
+version: 1.2.0
 homepage: https://github.com/kuldii/flutter-kgiton-sdk
 repository: https://github.com/kuldii/flutter-kgiton-sdk
 issue_tracker: https://github.com/kuldii/flutter-kgiton-sdk/issues
