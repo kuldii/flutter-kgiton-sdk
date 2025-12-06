@@ -99,6 +99,27 @@ class KgitonOwnerService {
     return response.data!;
   }
 
+  /// List all items owned by the authenticated user
+  ///
+  /// Returns [ItemListData] containing list of items and count
+  ///
+  /// Throws:
+  /// - [KgitonAuthenticationException] if not authenticated
+  /// - [KgitonApiException] for other errors
+  Future<ItemListData> listAllItems() async {
+    final response = await _client.get<ItemListData>(
+      KgitonApiEndpoints.listItems,
+      requiresAuth: true,
+      fromJsonT: (json) => ItemListData.fromJson(json),
+    );
+
+    if (!response.success || response.data == null) {
+      throw Exception('Failed to list items: ${response.message}');
+    }
+
+    return response.data!;
+  }
+
   /// List all items for a specific license
   ///
   /// [licenseKey] - The license key to filter items
