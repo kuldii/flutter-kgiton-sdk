@@ -17,13 +17,18 @@ Official Flutter SDK for integrating with KGiTON BLE scale devices.
 
 - 📘 [Authorization Guide](AUTHORIZATION.md) - How to obtain license
 - 📗 [Security Policy](SECURITY.md) - Security and vulnerability reporting
-- 📙 [Project Structure](STRUCTURE.md) - SDK organization
-- 📕 [Quick Reference](QUICK_REFERENCE.md) - Quick start guide
 - 📔 [Changelog](CHANGELOG.md) - Version history
+- 📚 [Complete Documentation](docs_integrations/) - Full integration guide
 - 🔧 [Example App](example/) - Complete working example
+
+### API Documentation
+- 🚀 [API Integration Guide](docs_integrations/18-api-integration-guide.md) - Complete API guide
+- ⚙️ [API Configuration](docs_integrations/19-api-configuration-guide.md) - How to configure endpoints
+- 📋 [API Quick Reference](docs_integrations/20-api-quick-reference.md) - Quick cheat sheet
 
 ## Features
 
+### BLE Scale Integration
 - ✅ Cross-platform (iOS + Android)
 - ✅ BLE device scanning with RSSI
 - ✅ Real-time weight data streaming (~10 Hz)
@@ -32,6 +37,18 @@ Official Flutter SDK for integrating with KGiTON BLE scale devices.
 - ✅ Connection state management
 - ✅ Type-safe API with comprehensive error handling
 - ✅ Built on kgiton_ble_sdk (proprietary)
+
+### API Integration
+- ✅ Complete REST API client
+- ✅ Authentication (login, register, logout)
+- ✅ License management (Super Admin)
+- ✅ Owner operations (items, licenses)
+- ✅ Cart management (add, update, clear, process)
+- ✅ Transaction management
+- ✅ Admin settings (processing fees)
+- ✅ Automatic token management
+- ✅ Local storage for configuration
+- ✅ Comprehensive error handling
 
 ## Quick Start
 
@@ -73,7 +90,7 @@ dependencies:
 <string>Need Bluetooth to connect to scale</string>
 ```
 
-### Basic Usage
+### Basic Usage - BLE Scale
 
 ```dart
 import 'package:kgiton_sdk/kgiton_sdk.dart';
@@ -121,15 +138,73 @@ await sdk.disconnect();
 ### Additional Resources
 
 - 📚 [Example App](example/) - Complete working example with Material Design 3 UI
+- 🌐 [API Integration Guide](docs_integrations/18-api-integration-guide.md) - Complete API documentation
 - 📋 [STRUCTURE.md](STRUCTURE.md) - Detailed project structure
 - 🔐 [AUTHORIZATION.md](AUTHORIZATION.md) - Licensing information
 - 🛡️ [SECURITY.md](SECURITY.md) - Security policy
+// Initialize API service
+final apiService = KgitonApiService(
+  baseUrl: 'https://api.kgiton.com',
+);
 
-## Example App
+// Login
+final authData = await apiService.auth.login(
+  email: 'owner@example.com',
+  password: 'password123',
+);
 
-See the [example](example/) directory for a complete working example with Material Design 3 UI.
+// List items
+final items = await apiService.owner.listItems('LICENSE-KEY');
 
-To run:
+// Add to cart
+final cartId = Uuid().v4();
+await apiService.cart.addToCart(
+  cartId: cartId,
+  licenseKey: 'LICENSE-KEY',
+  itemId: items.items.first.id,
+## API Overview
+
+### BLE Scale Service: `KGiTONScaleService`
+
+**Streams:**
+- `devicesStream` - Discovered devices
+- `weightStream` - Real-time weight data
+- `connectionStateStream` - Connection state changes
+
+**Methods:**
+- `startScan()` - Start scanning for devices
+- `stopScan()` - Stop scanning
+- `connect()` - Connect to device
+- `disconnect()` - Disconnect from device
+- `triggerBuzzer()` - Control buzzer
+
+**Properties:**
+- `connectionState` - Current connection state
+- `isConnected` - Connection status
+- `isAuthenticated` - Authentication status
+- `connectedDevice` - Current device
+- `availableDevices` - List of discovered devices
+
+### API Service: `KgitonApiService`
+
+**Services:**
+- `auth` - Authentication (login, register, logout)
+- `license` - License management (Super Admin)
+- `owner` - Owner operations (items, licenses)
+- `cart` - Cart management (add, update, clear, process)
+- `transaction` - Transaction management
+- `adminSettings` - Admin settings management
+
+**Key Features:**
+- Automatic token management
+- Local storage persistence
+- Comprehensive error handling
+- Type-safe models
+
+See [API Integration Guide](docs_integrations/18-api-integration-guide.md) for complete API documentation.
+
+## Running the Example
+
 ```bash
 cd example
 flutter pub get
@@ -213,7 +288,9 @@ See [LICENSE](LICENSE) file for complete terms and conditions.
 
 ---
 
-**SDK Version:** 1.1.0  
+**SDK Version:** 1.0.0  
+**API Base URL:** `https://dev-api.kgiton.com`  
+**API Version:** `/api/v1`  
 **Platform:** iOS + Android  
-**Flutter:** ≥3.3.0  
+**Flutter:** ≥3.0.0  
 © 2025 PT KGiTON. All rights reserved.

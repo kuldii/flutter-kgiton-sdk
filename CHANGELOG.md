@@ -5,6 +5,65 @@ All notable changes to the KGiTON SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2025-12-06
+
+### Initial Release - Complete SDK with BLE & API Integration
+
+### Added - Complete API Integration
+- **NEW**: Complete REST API client for KGiTON backend
+- **NEW**: Authentication service (login, register, logout)
+- **NEW**: License management service (Super Admin)
+- **NEW**: Owner operations service (items, licenses)
+- **NEW**: Cart management service (add, update, clear, process)
+- **NEW**: Transaction management service
+- **NEW**: Admin settings service (processing fees)
+- **NEW**: `KgitonApiService` - Main API service integrator
+- **NEW**: `KgitonApiClient` - HTTP client with automatic token management
+- **NEW**: 7 comprehensive model files for all API responses
+- **NEW**: Custom exception types for API errors (401, 403, 404, 409, 429, etc.)
+- **NEW**: Automatic token storage and retrieval using SharedPreferences
+- **NEW**: Complete API integration documentation
+- **NEW**: Full working example with API integration
+- **NEW**: `API_IMPLEMENTATION_SUMMARY.md` - Quick reference guide
+
+### Added - Models
+- `ApiResponse<T>` - Generic API response wrapper
+- `AuthData`, `User`, `UserProfile` - Authentication models
+- `License`, `LicenseListData`, `BulkLicenseData` - License models
+- `Item`, `ItemListData` - Item/product models
+- `CartItem`, `CartData`, `ProcessCartData` - Shopping cart models
+- `Transaction`, `TransactionDetail`, `TransactionListData` - Transaction models
+- `SystemSetting`, `CartProcessingFeeData` - Admin settings models
+
+### Added - Services
+- `KgitonAuthService` - Login, register, logout, get current user
+- `KgitonLicenseService` - Create, list, upload/download CSV licenses
+- `KgitonOwnerService` - Manage licenses, CRUD items
+- `KgitonCartService` - Add to cart, update, clear, process cart
+- `KgitonTransactionService` - List transactions, get details, summary
+- `KgitonAdminSettingsService` - Get/update system settings
+
+### Added - Features
+- ✅ Automatic JWT token management
+- ✅ Token persistence in local storage
+- ✅ Comprehensive error handling with specific exception types
+- ✅ Support for pagination in list endpoints
+- ✅ Date range filtering for transactions
+- ✅ CSV upload/download for license management
+- ✅ Multi-branch support via multiple licenses per owner
+- ✅ Cart processing with automatic fee calculation
+- ✅ Type-safe API with full type inference
+
+### Dependencies
+- Added: `http: ^1.2.0` - HTTP client for API calls
+- Required: `uuid: ^4.0.0` - For generating cart IDs (in consumer app)
+
+### Documentation
+- Added comprehensive API integration guide
+- Added complete usage examples for all endpoints
+- Added error handling best practices
+- Updated README with API features
+
 ## [1.1.0] - 2025-12-02
 
 ### Changed

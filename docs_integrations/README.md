@@ -35,6 +35,11 @@ This documentation is organized into the following sections:
 16. **[FAQ](16-faq.md)** - Frequently asked questions
 17. **[Glossary](17-glossary.md)** - Terms and definitions
 
+### API Integration (Backend)
+18. **[API Integration Guide](18-api-integration-guide.md)** - Complete API integration guide
+19. **[API Configuration Guide](19-api-configuration-guide.md)** - How to configure API endpoints
+20. **[API Quick Reference](20-api-quick-reference.md)** - Quick cheat sheet for API
+
 ---
 
 ## 🚀 Quick Start Path
