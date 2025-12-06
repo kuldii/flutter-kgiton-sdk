@@ -182,6 +182,15 @@ class KgitonApiClient {
     try {
       final uri = Uri.parse(_buildUrl(endpoint));
 
+      // Log request details
+      print('[KgitonApiClient] POST Request:');
+      print('[KgitonApiClient]   URL: $uri');
+      print('[KgitonApiClient]   Headers: ${_getHeaders(requiresAuth: requiresAuth)}');
+      if (body != null) {
+        final bodyJson = json.encode(body);
+        print('[KgitonApiClient]   Body: ${bodyJson.length > 500 ? bodyJson.substring(0, 500) + '...' : bodyJson}');
+      }
+
       final response = await _httpClient
           .post(
             uri,
@@ -218,11 +227,17 @@ class KgitonApiClient {
   }
 
   /// DELETE request
-  Future<ApiResponse<T>> delete<T>(String endpoint, {bool requiresAuth = false, T Function(dynamic)? fromJsonT}) async {
+  Future<ApiResponse<T>> delete<T>(String endpoint, {Map<String, dynamic>? body, bool requiresAuth = false, T Function(dynamic)? fromJsonT}) async {
     try {
       final uri = Uri.parse(_buildUrl(endpoint));
 
-      final response = await _httpClient.delete(uri, headers: _getHeaders(requiresAuth: requiresAuth)).timeout(KgitonApiConfig.requestTimeout);
+      final response = await _httpClient
+          .delete(
+            uri,
+            headers: _getHeaders(requiresAuth: requiresAuth),
+            body: body != null ? json.encode(body) : null,
+          )
+          .timeout(KgitonApiConfig.requestTimeout);
 
       return _handleResponse<T>(response, fromJsonT);
     } catch (e) {

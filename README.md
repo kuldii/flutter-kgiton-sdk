@@ -43,7 +43,7 @@ Official Flutter SDK for integrating with KGiTON BLE scale devices.
 - ✅ Authentication (login, register, logout)
 - ✅ License management (Super Admin)
 - ✅ Owner operations (items, licenses)
-- ✅ Cart management (add, update, clear, process)
+- ✅ Cart management (add, update, clear by license, process)
 - ✅ Transaction management
 - ✅ Admin settings (processing fees)
 - ✅ Automatic token management
@@ -158,6 +158,10 @@ await sdk.disconnect();
 - 📋 [STRUCTURE.md](STRUCTURE.md) - Detailed project structure
 - 🔐 [AUTHORIZATION.md](AUTHORIZATION.md) - Licensing information
 - 🛡️ [SECURITY.md](SECURITY.md) - Security policy
+
+### API Quick Example
+
+```dart
 // Initialize API service
 final apiService = KgitonApiService(
   baseUrl: 'https://api.kgiton.com',
@@ -169,15 +173,34 @@ final authData = await apiService.auth.login(
   password: 'password123',
 );
 
-// List items
-final items = await apiService.owner.listItems('LICENSE-KEY');
-
 // Add to cart
 final cartId = Uuid().v4();
 await apiService.cart.addToCart(
   cartId: cartId,
   licenseKey: 'LICENSE-KEY',
-  itemId: items.items.first.id,
+  itemId: 'item-id',
+  quantity: 5.5,
+);
+
+// Complete checkout flow
+try {
+  // 1. Process cart
+  final result = await apiService.cart.processCart(
+    cartId: cartId,
+    licenseKey: 'LICENSE-KEY',
+  );
+  
+  // 2. Clear cart after successful checkout (recommended)
+  await apiService.cart.clearCartByLicense(
+    licenseKey: 'LICENSE-KEY',
+  );
+  
+  print('Transaction: ${result.transactionId}');
+} catch (e) {
+  // Don't clear on error - user can retry
+}
+```
+
 ## API Overview
 
 ### BLE Scale Service: `KGiTONScaleService`
@@ -207,7 +230,7 @@ await apiService.cart.addToCart(
 - `auth` - Authentication (login, register, logout)
 - `license` - License management (Super Admin)
 - `owner` - Owner operations (items, licenses)
-- `cart` - Cart management (add, update, clear, process)
+- `cart` - Cart management (add, update, clear by license, process)
 - `transaction` - Transaction management
 - `adminSettings` - Admin settings management
 
@@ -235,29 +258,6 @@ This SDK uses:
 - **Language**: Pure Dart
 - **Pattern**: Stream-based reactive API
 - **Size**: ~52KB source code
-
-## API Overview
-
-### Main Class: `KGiTONScaleService`
-
-**Streams:**
-- `devicesStream` - Discovered devices
-- `weightStream` - Real-time weight data
-- `connectionStateStream` - Connection state changes
-
-**Methods:**
-- `startScan()` - Start scanning for devices
-- `stopScan()` - Stop scanning
-- `connect()` - Connect to device
-- `disconnect()` - Disconnect from device
-- `triggerBuzzer()` - Control buzzer
-
-**Properties:**
-- `connectionState` - Current connection state
-- `isConnected` - Connection status
-- `isAuthenticated` - Authentication status
-- `connectedDevice` - Current device
-- `availableDevices` - List of discovered devices
 
 See inline documentation in source code for complete API details.
 
@@ -309,4 +309,5 @@ See [LICENSE](LICENSE) file for complete terms and conditions.
 **API Version:** `/api/v1`  
 **Platform:** iOS + Android  
 **Flutter:** ≥3.0.0  
+
 © 2025 PT KGiTON. All rights reserved.

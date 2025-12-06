@@ -145,6 +145,10 @@ class KgitonApiEndpoints {
   /// DELETE /v1/cart/clear
   static const String clearCart = '/cart/clear';
 
+  /// Clear cart by license key
+  /// DELETE /v1/cart/clear-by-license
+  static const String clearCartByLicense = '/cart/clear-by-license';
+
   /// Process cart (create transaction)
   /// POST /v1/cart/process
   static const String processCart = '/cart/process';

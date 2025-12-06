@@ -430,19 +430,49 @@ await apiService.cart.clearCart(cartId);
 print('Cart cleared');
 ```
 
-### Process Cart
+### Process Cart & Checkout
+
+💡 **Best Practice**: Clear cart after successful checkout using `clearCartByLicense()`.
 
 ```dart
-final result = await apiService.cart.processCart(
-  cartId: cartId,
+try {
+  // 1. Process cart (create transaction)
+  final result = await apiService.cart.processCart(
+    cartId: cartId,
+    licenseKey: 'LICENSE-KEY',
+  );
+
+  print('Transaction created: ${result.transactionId}');
+  print('Subtotal: Rp ${result.subtotal}');
+  print('Processing Fee: Rp ${result.processingFee}');
+  print('Total: Rp ${result.total}');
+  print('Items: ${result.itemCount}');
+
+  // 2. Clear cart after successful checkout (recommended)
+  await apiService.cart.clearCartByLicense(
+    licenseKey: 'LICENSE-KEY',
+  );
+  
+  print('Cart cleared successfully');
+
+  // 3. Update local state
+  // Clear local cart items, reset UI, etc.
+
+} catch (e) {
+  print('Checkout failed: $e');
+  // Don't clear cart on error - user can retry
+}
+```
+
+### Clear Cart by License Key
+
+Clear all cart items for a specific license. This is the recommended approach after checkout.
+
+```dart
+await apiService.cart.clearCartByLicense(
   licenseKey: 'LICENSE-KEY',
 );
-
-print('Transaction created: ${result.transactionId}');
-print('Subtotal: Rp ${result.subtotal}');
-print('Processing Fee: Rp ${result.processingFee}');
-print('Total: Rp ${result.total}');
-print('Items: ${result.itemCount}');
+print('All carts for license cleared');
 ```
 
 ---

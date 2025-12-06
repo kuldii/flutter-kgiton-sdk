@@ -137,15 +137,25 @@ await api.cart.updateCartItem(
 // Remove item
 await api.cart.removeCartItem(cartItemId);
 
-// Clear cart
+// Clear cart by cart ID
 await api.cart.clearCart(cartId);
 
-// Process cart (create transaction)
-final result = await api.cart.processCart(
-  cartId: cartId,
-  licenseKey: 'KEY',
-);
-print('Transaction: ${result.transactionId}');
+// Clear cart by license (recommended after checkout)
+await api.cart.clearCartByLicense(licenseKey: 'KEY');
+
+// Process cart + checkout (best practice)
+try {
+  final result = await api.cart.processCart(
+    cartId: cartId,
+    licenseKey: 'KEY',
+  );
+  print('Transaction: ${result.transactionId}');
+  
+  // Clear cart after successful checkout (recommended)
+  await api.cart.clearCartByLicense(licenseKey: 'KEY');
+} catch (e) {
+  // Don't clear on error - user can retry
+}
 ```
 
 ---

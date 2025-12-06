@@ -150,6 +150,45 @@ class KgitonCartService {
     }
   }
 
+  /// Clear all cart items for a specific license key
+  ///
+  /// 💡 RECOMMENDED: Call this after successful `processCart()` to clear the cart.
+  /// This is useful to clean up cart data after completing a transaction.
+  ///
+  /// [licenseKey] - License key to clear carts for
+  ///
+  /// Complete checkout flow example:
+  /// ```dart
+  /// try {
+  ///   // 1. Process cart (create transaction)
+  ///   final transaction = await cartService.processCart(
+  ///     cartId: cartId,
+  ///     licenseKey: licenseKey,
+  ///   );
+  ///
+  ///   // 2. Clear cart after successful checkout (recommended)
+  ///   await cartService.clearCartByLicense(licenseKey: licenseKey);
+  ///
+  ///   // 3. Update local state and show success
+  ///   print('Transaction created: ${transaction.transactionId}');
+  /// } catch (e) {
+  ///   // Don't clear cart on error - user can retry
+  ///   print('Checkout failed: $e');
+  /// }
+  /// ```
+  ///
+  /// Throws:
+  /// - [KgitonAuthenticationException] if not authenticated
+  /// - [KgitonValidationException] if license_key is missing
+  /// - [KgitonApiException] for other errors
+  Future<void> clearCartByLicense({required String licenseKey}) async {
+    final response = await _client.delete(KgitonApiEndpoints.clearCartByLicense, body: {'license_key': licenseKey}, requiresAuth: true);
+
+    if (!response.success) {
+      throw Exception('Failed to clear cart by license: ${response.message}');
+    }
+  }
+
   /// Process cart and create transaction
   ///
   /// [cartId] - UUID of the cart to process
@@ -157,10 +196,15 @@ class KgitonCartService {
   ///
   /// Returns [ProcessCartData] containing transaction details
   ///
-  /// Note: This will automatically:
+  /// 💡 IMPORTANT: Backend does NOT auto-clear cart after creating transaction.
+  /// You should manually call `clearCartByLicense()` after successful checkout.
+  ///
+  /// This method will:
   /// - Create a transaction with all cart items
   /// - Add processing fee
-  /// - Clear the cart
+  /// - Return transaction details
+  ///
+  /// For complete checkout flow, see `clearCartByLicense()` documentation.
   ///
   /// Throws:
   /// - [KgitonAuthenticationException] if not authenticated

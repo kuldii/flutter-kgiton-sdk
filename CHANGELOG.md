@@ -39,7 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `KgitonAuthService` - Login, register, logout, get current user
 - `KgitonLicenseService` - Create, list, upload/download CSV licenses
 - `KgitonOwnerService` - Manage licenses, CRUD items
-- `KgitonCartService` - Add to cart, update, clear, process cart
+- `KgitonCartService` - Add to cart, update, clear by cart ID or license key, process cart
+  - `clearCart()` - Clear cart by cart ID
+  - `clearCartByLicense()` - Clear all carts for a specific license (recommended after checkout)
 - `KgitonTransactionService` - List transactions, get details, summary
 - `KgitonAdminSettingsService` - Get/update system settings
 
