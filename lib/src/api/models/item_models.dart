@@ -1,44 +1,56 @@
 /// Item model
 class Item {
   final String id;
-  final String licenseId;
+  final String ownerId;
   final String name;
   final String unit;
   final double price;
+  final double? pricePerPcs;
+  final String? description;
+  final bool isActive;
   final DateTime createdAt;
-  final DateTime? updatedAt;
+  final DateTime updatedAt;
 
   Item({
     required this.id,
-    required this.licenseId,
+    required this.ownerId,
     required this.name,
     required this.unit,
     required this.price,
+    this.pricePerPcs,
+    this.description,
+    required this.isActive,
     required this.createdAt,
-    this.updatedAt,
+    required this.updatedAt,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
-      id: json['id'] as String,
-      licenseId: json['license_id'] as String,
-      name: json['name'] as String,
-      unit: json['unit'] as String,
-      price: (json['price'] as num).toDouble(),
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
+      id: (json['id'] as String?) ?? '',
+      ownerId: (json['owner_id'] as String?) ?? '',
+      name: (json['name'] as String?) ?? '',
+      unit: (json['unit'] as String?) ?? '',
+      price: ((json['price'] as num?) ?? 0).toDouble(),
+      pricePerPcs: (json['price_per_pcs'] as num?)?.toDouble(),
+      description: json['description'] as String?,
+      isActive: (json['is_active'] as bool?) ?? true,
+      createdAt: DateTime.parse((json['created_at'] as String?) ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse((json['updated_at'] as String?) ?? DateTime.now().toIso8601String()),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'license_id': licenseId,
+      'owner_id': ownerId,
       'name': name,
       'unit': unit,
       'price': price,
+      if (pricePerPcs != null) 'price_per_pcs': pricePerPcs,
+      if (description != null) 'description': description,
+      'is_active': isActive,
       'created_at': createdAt.toIso8601String(),
-      if (updatedAt != null) 'updated_at': updatedAt!.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
     };
   }
 }

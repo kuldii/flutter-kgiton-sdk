@@ -95,6 +95,10 @@ class KgitonAuthService {
   /// - [KgitonApiException] for other errors
   Future<CurrentUserData> getCurrentUser() async {
     try {
+      print('[AuthService] getCurrentUser - Starting...');
+      print('[AuthService] getCurrentUser - Endpoint: ${KgitonApiEndpoints.getCurrentUser}');
+      print('[AuthService] getCurrentUser - Has token: ${_client.hasAccessToken()}');
+
       final response = await _client.get<CurrentUserData>(
         KgitonApiEndpoints.getCurrentUser,
         requiresAuth: true,
@@ -102,9 +106,20 @@ class KgitonAuthService {
           // Debug: Print the raw JSON structure
           print('[AuthService] getCurrentUser - Raw JSON type: ${json.runtimeType}');
           print('[AuthService] getCurrentUser - Raw JSON: $json');
-          return CurrentUserData.fromJson(json);
+
+          try {
+            return CurrentUserData.fromJson(json);
+          } catch (e, stackTrace) {
+            print('[AuthService] getCurrentUser - Parse error: $e');
+            print('[AuthService] getCurrentUser - Stack trace: $stackTrace');
+            rethrow;
+          }
         },
       );
+
+      print('[AuthService] getCurrentUser - Response success: ${response.success}');
+      print('[AuthService] getCurrentUser - Response message: ${response.message}');
+      print('[AuthService] getCurrentUser - Response has data: ${response.data != null}');
 
       if (!response.success || response.data == null) {
         throw Exception('Failed to get current user: ${response.message}');

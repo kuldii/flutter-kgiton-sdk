@@ -92,7 +92,7 @@ class KgitonLicenseService {
       KgitonApiEndpoints.listLicenses,
       queryParameters: queryParams,
       requiresAuth: true,
-      fromJsonT: (json) => LicenseListData.fromJson(json as Map<String, dynamic>),
+      fromJsonT: (json) => LicenseListData.fromJson(json),
     );
 
     if (!response.success || response.data == null) {

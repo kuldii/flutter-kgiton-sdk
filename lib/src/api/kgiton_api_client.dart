@@ -54,6 +54,16 @@ class KgitonApiClient {
     _refreshToken = null;
   }
 
+  /// Check if access token exists
+  bool hasAccessToken() {
+    return _accessToken != null && _accessToken!.isNotEmpty;
+  }
+
+  /// Check if refresh token exists
+  bool hasRefreshToken() {
+    return _refreshToken != null && _refreshToken!.isNotEmpty;
+  }
+
   /// Save configuration to local storage
   Future<void> saveConfiguration() async {
     final prefs = await SharedPreferences.getInstance();
@@ -110,7 +120,11 @@ class KgitonApiClient {
 
     try {
       jsonBody = json.decode(response.body) as Map<String, dynamic>;
+      print('[KgitonApiClient] Response status: ${response.statusCode}');
+      print('[KgitonApiClient] Response body: ${response.body.substring(0, response.body.length > 500 ? 500 : response.body.length)}');
     } catch (e) {
+      print('[KgitonApiClient] JSON decode error: $e');
+      print('[KgitonApiClient] Response body: ${response.body}');
       throw KgitonApiException(message: 'Invalid JSON response', statusCode: response.statusCode);
     }
 

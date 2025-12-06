@@ -47,7 +47,7 @@ class KgitonTransactionService {
       KgitonApiEndpoints.listTransactions,
       queryParameters: queryParams,
       requiresAuth: true,
-      fromJsonT: (json) => TransactionListData.fromJson(json as Map<String, dynamic>),
+      fromJsonT: (json) => TransactionListData.fromJson(json),
     );
 
     if (!response.success || response.data == null) {

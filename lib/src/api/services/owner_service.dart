@@ -28,7 +28,7 @@ class KgitonOwnerService {
     final response = await _client.get<OwnerLicensesData>(
       KgitonApiEndpoints.listOwnerLicenses,
       requiresAuth: true,
-      fromJsonT: (json) => OwnerLicensesData.fromJson(json as Map<String, dynamic>),
+      fromJsonT: (json) => OwnerLicensesData.fromJson(json),
     );
 
     if (!response.success || response.data == null) {
@@ -116,7 +116,7 @@ class KgitonOwnerService {
       KgitonApiEndpoints.listItems,
       queryParameters: queryParams,
       requiresAuth: true,
-      fromJsonT: (json) => ItemListData.fromJson(json as Map<String, dynamic>),
+      fromJsonT: (json) => ItemListData.fromJson(json),
     );
 
     if (!response.success || response.data == null) {
