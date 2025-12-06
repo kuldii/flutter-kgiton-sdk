@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Initial Release - Complete SDK with BLE & API Integration
 
+### Added - Permanent Delete Support
+- **NEW**: `deleteItemPermanent()` method for hard delete (remove from database)
+- **NEW**: Enhanced `deleteItem()` documentation (soft delete - set is_active = false)
+- **NEW**: `deletePermanentItem()` endpoint constant
+- **NEW**: Enhanced DELETE request logging for debugging
+- **NEW**: `TROUBLESHOOTING_DELETE_ITEM.md` - Complete guide for delete operations
+- **NEW**: Complete examples for soft delete vs permanent delete in README
+- **NEW**: Delete operations section in API README with best practices
+
+### Changed
+- `deleteItem()` now returns `bool` instead of `void` for better response handling
+- Updated documentation to clarify soft delete behavior
+- Enhanced error messages for delete operations
+
+### Fixed
+- Clarified that `deleteItem()` performs soft delete (is_active = false)
+- Added proper documentation about backend soft delete system
+- Added warnings about permanent delete being irreversible
+
 ### Added - BLE Scan Optimization (Built-in from v1.0.0)
 - **NEW**: `autoStopOnFound` parameter in `scanForDevices()` untuk auto-stop scan setelah menemukan device
 - **NEW**: Auto-stop scan saat user melakukan connect ke device

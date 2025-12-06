@@ -231,6 +231,13 @@ class KgitonApiClient {
     try {
       final uri = Uri.parse(_buildUrl(endpoint));
 
+      print('[KgitonApiClient] DELETE Request:');
+      print('[KgitonApiClient] URL: $uri');
+      print('[KgitonApiClient] Headers: ${_getHeaders(requiresAuth: requiresAuth)}');
+      if (body != null) {
+        print('[KgitonApiClient] Body: ${json.encode(body)}');
+      }
+
       final response = await _httpClient
           .delete(
             uri,

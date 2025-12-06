@@ -61,7 +61,8 @@ lib/src/api/
 - List items by license
 - Get item detail
 - Update item
-- Delete item
+- Delete item (soft delete - set is_active = false)
+- Delete item permanent (hard delete - remove from database)
 
 #### 4. Cart Service
 - Add item to cart
@@ -375,6 +376,172 @@ void dispose() {
 }
 ```
 
+## 🗑️ Delete Operations
+
+### Soft Delete vs Permanent Delete
+
+Backend uses **soft delete** system. Two types of delete operations available:
+
+#### 1. Soft Delete (Default)
+
+Sets `is_active = false`. Item remains in database but won't appear in lists.
+
+```dart
+// Soft delete
+final deleted = await api.owner.deleteItem(itemId);
+
+if (deleted) {
+  // Item won't appear in list anymore (backend filters by is_active = true)
+  final items = await api.owner.listAllItems();
+  print('Remaining items: ${items.items.length}');
+}
+```
+
+**Use cases:**
+- Regular delete operations
+- When you might need to restore items later
+- Audit trail requirements
+- Safer for production
+
+#### 2. Permanent Delete
+
+Removes item from database physically. **Irreversible!**
+
+```dart
+// Show confirmation first
+final confirm = await showConfirmDialog(
+  'Permanently delete this item? This cannot be undone!',
+);
+
+if (confirm) {
+  try {
+    final deleted = await api.owner.deleteItemPermanent(itemId);
+    
+    if (deleted) {
+      // Item completely removed from database
+      final items = await api.owner.listAllItems();
+      showSuccess('Item permanently deleted');
+    }
+  } catch (e) {
+    showError('Failed to delete: $e');
+  }
+}
+```
+
+**Use cases:**
+- Cleanup old/test data
+- GDPR compliance (data removal requests)
+- When database space is critical
+- Definitive removal needed
+
+**⚠️ Warning:** Always show confirmation dialog for permanent delete!
+
+### Complete Delete Example
+
+```dart
+Future<void> handleDelete(BuildContext context, Item item, {bool permanent = false}) async {
+  // Show appropriate confirmation
+  final message = permanent
+      ? 'Permanently delete "${item.name}"? This action cannot be undone!'
+      : 'Delete "${item.name}"? (Can be restored later)';
+  
+  final confirm = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(permanent ? 'Permanent Delete' : 'Delete Item'),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: Text('Delete'),
+          style: TextButton.styleFrom(
+            foregroundColor: permanent ? Colors.red : null,
+          ),
+        ),
+      ],
+    ),
+  );
+
+  if (confirm == true) {
+    try {
+      // Show loading
+      showLoadingDialog(context);
+
+      // Delete
+      final deleted = permanent
+          ? await api.owner.deleteItemPermanent(item.id)
+          : await api.owner.deleteItem(item.id);
+
+      // Hide loading
+      Navigator.pop(context);
+
+      if (deleted) {
+        // Refresh list
+        final updatedItems = await api.owner.listAllItems();
+        setState(() {
+          items = updatedItems.items;
+        });
+
+        // Show success
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(permanent
+                ? 'Item permanently deleted'
+                : 'Item deleted'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      Navigator.pop(context); // Hide loading
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+}
+
+// Usage in UI
+PopupMenuButton(
+  itemBuilder: (context) => [
+    PopupMenuItem(
+      value: 'delete',
+      child: Row(
+        children: [
+          Icon(Icons.delete),
+          SizedBox(width: 8),
+          Text('Delete'),
+        ],
+      ),
+    ),
+    PopupMenuItem(
+      value: 'delete_permanent',
+      child: Row(
+        children: [
+          Icon(Icons.delete_forever, color: Colors.red),
+          SizedBox(width: 8),
+          Text('Delete Forever', style: TextStyle(color: Colors.red)),
+        ],
+      ),
+    ),
+  ],
+  onSelected: (value) {
+    if (value == 'delete') {
+      handleDelete(context, item, permanent: false);
+    } else if (value == 'delete_permanent') {
+      handleDelete(context, item, permanent: true);
+    }
+  },
+)
+```
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
@@ -403,6 +570,22 @@ try {
 // Solution: Call saveConfiguration after login
 await apiService.auth.login(...);
 await apiService.saveConfiguration(); // Don't forget this!
+```
+
+**Issue**: Item still appears after delete
+```dart
+// Solution: Backend uses soft delete, item is filtered by is_active
+// Make sure to refresh list after delete
+final deleted = await api.owner.deleteItem(itemId);
+if (deleted) {
+  final items = await api.owner.listAllItems(); // Refresh
+  setState(() {
+    this.items = items.items;
+  });
+}
+
+// If item still appears, backend may have issue with is_active filter
+// See TROUBLESHOOTING_DELETE_ITEM.md for details
 ```
 
 ## 📞 Support

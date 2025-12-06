@@ -187,13 +187,22 @@ final authData = await apiService.auth.login(
 );
 
 // List items
-final itemsData = await apiService.owner.listItems(
-  'LICENSE-KEY',
-  page: 1,
-  limit: 10,
+final itemsData = await apiService.owner.listAllItems();
+print('Items: ${itemsData.items.length}');
+
+// Create item
+final item = await apiService.owner.createItem(
+  licenseKey: 'LICENSE-KEY',
+  name: 'Apple',
+  unit: 'kg',
+  price: 15000,
 );
 
-print('Items: ${itemsData.items.length}');
+// Soft delete (set is_active = false)
+await apiService.owner.deleteItem(item.id);
+
+// Permanent delete (remove from database)
+await apiService.owner.deleteItemPermanent(item.id);
 ```
 
 ## API Overview
