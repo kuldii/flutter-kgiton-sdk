@@ -146,6 +146,38 @@ class KgitonApiEndpoints {
   static const String paymentCallback = '/transactions/callback';
 
   // ============================================================================
+  // CART ENDPOINTS (Owner)
+  // ============================================================================
+
+  /// Add item to cart or update if already exists
+  /// POST /v1/cart
+  static const String addToCart = '/cart';
+
+  /// Get all cart items by license key
+  /// GET /v1/cart/:licenseKey
+  static String getCartByLicenseKey(String licenseKey) => '/cart/$licenseKey';
+
+  /// Get cart summary with estimated total
+  /// GET /v1/cart/:licenseKey/summary
+  static String getCartSummary(String licenseKey) => '/cart/$licenseKey/summary';
+
+  /// Get single cart item by ID
+  /// GET /v1/cart/item/:id
+  static String getCartItem(String id) => '/cart/item/$id';
+
+  /// Update cart item
+  /// PUT /v1/cart/:id
+  static String updateCartItem(String id) => '/cart/$id';
+
+  /// Delete single cart item
+  /// DELETE /v1/cart/:id
+  static String deleteCartItem(String id) => '/cart/$id';
+
+  /// Delete all cart items by license key (clear cart)
+  /// DELETE /v1/cart/license/:licenseKey
+  static String deleteCartByLicenseKey(String licenseKey) => '/cart/license/$licenseKey';
+
+  // ============================================================================
   // ADMIN SETTINGS ENDPOINTS (Super Admin)
   // ============================================================================
 

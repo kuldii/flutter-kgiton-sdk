@@ -4,6 +4,7 @@ import 'services/license_service.dart';
 import 'services/owner_service.dart';
 import 'services/transaction_service.dart';
 import 'services/admin_settings_service.dart';
+import 'services/cart_service.dart';
 
 /// Main API Service for KGiTON SDK
 ///
@@ -13,6 +14,7 @@ import 'services/admin_settings_service.dart';
 /// - Owner Operations
 /// - Transaction Management
 /// - Admin Settings
+/// - Shopping Cart
 ///
 /// Example usage:
 /// ```dart
@@ -26,6 +28,15 @@ import 'services/admin_settings_service.dart';
 ///
 /// // List items
 /// final items = await apiService.owner.listItems('LICENSE-KEY');
+///
+/// // Add to cart
+/// await apiService.cart.addItemToCart(
+///   AddCartRequest(
+///     licenseKey: 'LICENSE-KEY',
+///     itemId: 'item-uuid',
+///     quantity: 2.5,
+///   ),
+/// );
 /// ```
 class KgitonApiService {
   final KgitonApiClient _client;
@@ -35,6 +46,7 @@ class KgitonApiService {
   late final KgitonOwnerService owner;
   late final KgitonTransactionService transaction;
   late final KgitonAdminSettingsService adminSettings;
+  late final KgitonCartService cart;
 
   KgitonApiService({required String baseUrl, String? accessToken, String? refreshToken})
     : _client = KgitonApiClient(baseUrl: baseUrl, accessToken: accessToken, refreshToken: refreshToken) {
@@ -52,6 +64,7 @@ class KgitonApiService {
     owner = KgitonOwnerService(_client);
     transaction = KgitonTransactionService(_client);
     adminSettings = KgitonAdminSettingsService(_client);
+    cart = KgitonCartService(_client);
   }
 
   /// Get the underlying API client
