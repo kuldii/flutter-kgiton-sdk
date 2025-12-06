@@ -10,10 +10,9 @@ Complete guide for integrating with KGiTON backend API.
 2. [Authentication](#authentication)
 3. [License Management](#license-management)
 4. [Item Management](#item-management)
-5. [Cart Operations](#cart-operations)
-6. [Transactions](#transactions)
-7. [Error Handling](#error-handling)
-8. [Complete Workflows](#complete-workflows)
+5. [Transactions](#transactions)
+6. [Error Handling](#error-handling)
+7. [Complete Workflows](#complete-workflows)
 
 ---
 
@@ -259,75 +258,6 @@ print('✅ Item deleted');
 
 ---
 
-## Cart Operations
-
-**See [CART_GUIDE.md](CART_GUIDE.md) for complete cart documentation.**
-
-### Quick Cart Flow
-
-```dart
-import 'package:uuid/uuid.dart';
-
-// 1. Create cart ID
-final cartId = Uuid().v4();
-final licenseKey = 'YOUR-LICENSE-KEY';
-
-// 2. Add items (UPSERT: adds quantity if exists)
-await api.cart.addToCart(
-  cartId: cartId,
-  licenseKey: licenseKey,
-  itemId: 'item-id',
-  quantity: 2.5,
-);
-
-// 3. View cart
-final cart = await api.cart.viewCart(
-  cartId: cartId,
-  licenseKey: licenseKey,
-);
-
-print('Items: ${cart.summary.totalItems}');
-print('Total: Rp ${cart.summary.grandTotal}');
-
-// 4. Update item quantity (sets to specific value)
-await api.cart.updateCartItem(
-  cartItemId: cart.items[0].id,
-  quantity: 3.0,  // Sets to 3.0 (not add 3.0)
-);
-
-// 5. Remove item
-await api.cart.removeCartItem(cart.items[0].id);
-
-// 6. Process cart (checkout) - auto-clears by default
-final result = await api.cart.processCart(
-  cartId: cartId,
-  licenseKey: licenseKey,
-  paymentMethod: 'qris',      // Optional
-  notes: 'Mobile order',      // Optional
-  // autoClear: true (default) - Cart auto-cleared!
-);
-
-print('✅ Transaction: ${result.transactionId}');
-print('✅ Cart cleared automatically');
-
-// Generate new cart ID for next session
-cartId = Uuid().v4();
-```
-
-### Cart Methods Summary
-
-| Method | Description | UPSERT? |
-|--------|-------------|---------|
-| `addToCart()` | Add item to cart | ✅ Adds quantity if exists |
-| `viewCart()` | Get cart details | - |
-| `updateCartItem()` | Set specific quantity | ❌ Sets value (not add) |
-| `removeCartItem()` | Remove single item | - |
-| `clearCart()` | Clear cart by cart ID | - |
-| `clearCartByLicense()` | Clear all carts for license | - |
-| `processCart()` | Checkout (auto-clears) | - |
-
----
-
 ## Transactions
 
 ### List Transactions
@@ -485,70 +415,7 @@ Future<void> setupNewOwner() async {
 }
 ```
 
-### Workflow 2: Complete Shopping Flow
-
-```dart
-Future<void> completeShoppingFlow() async {
-  try {
-    // 1. Login
-    await api.auth.login(
-      email: 'owner@example.com',
-      password: 'password',
-    );
-    
-    final licenseKey = 'YOUR-LICENSE-KEY';
-    
-    // 2. Get items
-    final itemsData = await api.owner.listItems(licenseKey);
-    final items = itemsData.items;
-    
-    // 3. Create cart
-    final cartId = Uuid().v4();
-    
-    // 4. Customer weighs items and adds to cart
-    for (var item in items.take(3)) {
-      final weight = 2.5; // From scale
-      
-      await api.cart.addToCart(
-        cartId: cartId,
-        licenseKey: licenseKey,
-        itemId: item.id,
-        quantity: weight,
-      );
-      
-      print('Added ${item.name}: $weight kg');
-    }
-    
-    // 5. View cart
-    final cart = await api.cart.viewCart(
-      cartId: cartId,
-      licenseKey: licenseKey,
-    );
-    
-    print('\n📦 Cart Summary:');
-    print('Items: ${cart.summary.totalItems}');
-    print('Total: Rp ${cart.summary.grandTotal}');
-    
-    // 6. Checkout
-    final result = await api.cart.processCart(
-      cartId: cartId,
-      licenseKey: licenseKey,
-      paymentMethod: 'qris',
-      notes: 'Mobile checkout',
-    );
-    
-    print('\n✅ Transaction completed!');
-    print('ID: ${result.transactionId}');
-    print('Total: Rp ${result.total}');
-    print('Items: ${result.itemCount}');
-    
-  } catch (e) {
-    print('❌ Shopping flow failed: $e');
-  }
-}
-```
-
-### Workflow 3: Daily Sales Report
+### Workflow 2: Daily Sales Report
 
 ```dart
 Future<void> generateDailySalesReport() async {
@@ -728,6 +595,5 @@ final items = await retryOperation(
 
 ## Next Steps
 
-- **Cart System**: Complete cart implementation guide - [CART_GUIDE.md](CART_GUIDE.md)
 - **BLE Integration**: Connect to scale devices - [BLE_INTEGRATION.md](BLE_INTEGRATION.md)
 - **Troubleshooting**: Common issues - [TROUBLESHOOTING.md](TROUBLESHOOTING.md)

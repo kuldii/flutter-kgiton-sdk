@@ -15,7 +15,6 @@ lib/src/api/
 │   ├── auth_models.dart          # Authentication models
 │   ├── license_models.dart       # License management models
 │   ├── item_models.dart          # Item/product models
-│   ├── cart_models.dart          # Shopping cart models
 │   ├── transaction_models.dart   # Transaction models
 │   ├── admin_models.dart         # Admin settings models
 │   └── models.dart               # Barrel export
@@ -23,7 +22,6 @@ lib/src/api/
     ├── auth_service.dart         # Authentication service
     ├── license_service.dart      # License management (Super Admin)
     ├── owner_service.dart        # Owner operations
-    ├── cart_service.dart         # Cart management
     ├── transaction_service.dart  # Transaction operations
     ├── admin_settings_service.dart # System settings
     └── services.dart             # Barrel export
@@ -242,30 +240,9 @@ await api.auth.login(
 
 // 2. Get items
 final itemData = await api.owner.listItems('LICENSE-KEY');
+print('Total items: ${itemData.items.length}');
 
-// 3. Create cart
-final cartId = Uuid().v4();
-for (var item in itemData.items) {
-  await api.cart.addToCart(
-    cartId: cartId,
-    licenseKey: 'LICENSE-KEY',
-    itemId: item.id,
-    quantity: 2.0,
-  );
-}
-
-// 4. View cart
-final cart = await api.cart.viewCart(cartId: cartId);
-print('Total: Rp ${cart.summary.subtotal}');
-
-// 5. Process to transaction
-final result = await api.cart.processCart(
-  cartId: cartId,
-  licenseKey: 'LICENSE-KEY',
-);
-print('Transaction ID: ${result.transactionId}');
-
-// 6. View transactions
+// 3. View transactions
 final txList = await api.transaction.listTransactions(
   licenseKey: 'LICENSE-KEY',
   page: 1,

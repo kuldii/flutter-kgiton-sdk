@@ -122,38 +122,6 @@ class KgitonApiEndpoints {
   static String deleteItem(String id) => '/items/$id';
 
   // ============================================================================
-  // CART ENDPOINTS (Owner)
-  // ============================================================================
-
-  /// Add item to cart
-  /// POST /v1/cart/add
-  static const String addToCart = '/cart/add';
-
-  /// View cart
-  /// GET /v1/cart
-  static const String viewCart = '/cart';
-
-  /// Update cart item
-  /// PATCH /v1/cart/items/:id
-  static String updateCartItem(String cartItemId) => '/cart/items/$cartItemId';
-
-  /// Remove item from cart
-  /// DELETE /v1/cart/items/:id
-  static String removeFromCart(String cartItemId) => '/cart/items/$cartItemId';
-
-  /// Clear cart
-  /// DELETE /v1/cart/clear
-  static const String clearCart = '/cart/clear';
-
-  /// Clear cart by license key
-  /// DELETE /v1/cart/clear-by-license
-  static const String clearCartByLicense = '/cart/clear-by-license';
-
-  /// Process cart (create transaction)
-  /// POST /v1/cart/process
-  static const String processCart = '/cart/process';
-
-  // ============================================================================
   // TRANSACTION ENDPOINTS (Owner)
   // ============================================================================
 

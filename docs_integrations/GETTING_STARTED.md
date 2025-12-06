@@ -325,8 +325,7 @@ After getting your first integration working:
 
 1. **BLE Integration** - Read [BLE_INTEGRATION.md](BLE_INTEGRATION.md) for complete BLE features
 2. **API Integration** - Read [API_INTEGRATION.md](API_INTEGRATION.md) for backend operations
-3. **Cart System** - Read [CART_GUIDE.md](CART_GUIDE.md) for shopping cart implementation
-4. **Troubleshooting** - See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) if you encounter issues
+3. **Troubleshooting** - See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) if you encounter issues
 
 ---
 

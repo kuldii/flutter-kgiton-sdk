@@ -2,7 +2,6 @@ import 'kgiton_api_client.dart';
 import 'services/auth_service.dart';
 import 'services/license_service.dart';
 import 'services/owner_service.dart';
-import 'services/cart_service.dart';
 import 'services/transaction_service.dart';
 import 'services/admin_settings_service.dart';
 
@@ -12,7 +11,6 @@ import 'services/admin_settings_service.dart';
 /// - Authentication
 /// - License Management
 /// - Owner Operations
-/// - Cart Management
 /// - Transaction Management
 /// - Admin Settings
 ///
@@ -28,14 +26,6 @@ import 'services/admin_settings_service.dart';
 ///
 /// // List items
 /// final items = await apiService.owner.listItems('LICENSE-KEY');
-///
-/// // Add to cart
-/// final cartItem = await apiService.cart.addToCart(
-///   cartId: 'cart-uuid',
-///   licenseKey: 'LICENSE-KEY',
-///   itemId: 'item-uuid',
-///   quantity: 5.0,
-/// );
 /// ```
 class KgitonApiService {
   final KgitonApiClient _client;
@@ -43,7 +33,6 @@ class KgitonApiService {
   late final KgitonAuthService auth;
   late final KgitonLicenseService license;
   late final KgitonOwnerService owner;
-  late final KgitonCartService cart;
   late final KgitonTransactionService transaction;
   late final KgitonAdminSettingsService adminSettings;
 
@@ -61,7 +50,6 @@ class KgitonApiService {
     auth = KgitonAuthService(_client);
     license = KgitonLicenseService(_client);
     owner = KgitonOwnerService(_client);
-    cart = KgitonCartService(_client);
     transaction = KgitonTransactionService(_client);
     adminSettings = KgitonAdminSettingsService(_client);
   }

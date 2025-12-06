@@ -7,35 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2025-12-06
 
-### Added - Cart Enhancement
-- **NEW**: `processCart()` now supports `autoClear` parameter (default: `true`)
-- **NEW**: `processCart()` supports optional `paymentMethod` parameter
-- **NEW**: `processCart()` supports optional `notes` parameter
-- **NEW**: Cart auto-clears after successful transaction (when `autoClear=true`)
+### Added - API Enhancement
+- **NEW**: Transaction management with optional `paymentMethod` parameter
+- **NEW**: Transaction supports optional `notes` parameter
 
-### Changed - Cart Models
-- **BREAKING**: Cart models now support nullable fields from backend:
-  - `CartItem.updatedAt` - Now optional (`DateTime?`)
-  - `CartItemInfo.price` - Now optional (`double?`)
-  - `CartSummary.processingFee` - Now optional (`double?`)
-  - `CartSummary.grandTotal` - Now optional (`double?`)
-- **IMPROVED**: All cart models now have comprehensive error handling in `fromJson()`
+### Changed - API Models
+- **IMPROVED**: All API models now support nullable fields from backend
+- **IMPROVED**: All models now have comprehensive error handling in `fromJson()`
 - **IMPROVED**: Debug logging added to help diagnose parsing errors
 
 ### Changed - Documentation
-- **UPDATED**: `22-cart-logic-guide.md` with auto-clear behavior
-- **UPDATED**: Complete examples for checkout with/without auto-clear
-- **UPDATED**: UPSERT behavior clarified with more examples
-- **UPDATED**: Best practices updated to reflect auto-clear feature
+- **UPDATED**: Complete API integration examples
+- **UPDATED**: Best practices updated for API usage
 
 ### Fixed
-- Fixed cart button always disabled issue (now enables when authenticated)
 - Fixed type cast errors from backend responses with nullable fields
-
-### Migration Notes
-- Default behavior: Cart now auto-clears after `processCart()` - no need to call `clearCartByLicense()`
-- If you need manual control, set `autoClear: false` in `processCart()`
-- Remove any manual `clearCartByLicense()` calls after `processCart()` (redundant)
 
 ## [1.0.0] - 2025-12-06
 
@@ -46,7 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **NEW**: Authentication service (login, register, logout)
 - **NEW**: License management service (Super Admin)
 - **NEW**: Owner operations service (items, licenses)
-- **NEW**: Cart management service (add, update, clear, process)
 - **NEW**: Transaction management service
 - **NEW**: Admin settings service (processing fees)
 - **NEW**: `KgitonApiService` - Main API service integrator
@@ -63,7 +48,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `AuthData`, `User`, `UserProfile` - Authentication models
 - `License`, `LicenseListData`, `BulkLicenseData` - License models
 - `Item`, `ItemListData` - Item/product models
-- `CartItem`, `CartData`, `ProcessCartData` - Shopping cart models
 - `Transaction`, `TransactionDetail`, `TransactionListData` - Transaction models
 - `SystemSetting`, `CartProcessingFeeData` - Admin settings models
 
@@ -71,9 +55,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `KgitonAuthService` - Login, register, logout, get current user
 - `KgitonLicenseService` - Create, list, upload/download CSV licenses
 - `KgitonOwnerService` - Manage licenses, CRUD items
-- `KgitonCartService` - Add to cart, update, clear by cart ID or license key, process cart
-  - `clearCart()` - Clear cart by cart ID
-  - `clearCartByLicense()` - Clear all carts for a specific license (recommended after checkout)
 - `KgitonTransactionService` - List transactions, get details, summary
 - `KgitonAdminSettingsService` - Get/update system settings
 
@@ -87,7 +68,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✅ Date range filtering for transactions
 - ✅ CSV upload/download for license management
 - ✅ Multi-branch support via multiple licenses per owner
-- ✅ Cart processing with automatic fee calculation
 - ✅ Type-safe API with full type inference
 - ✅ **Robust BLE permission handling untuk Android 10+**
 - ✅ **`PermissionHelper` class dengan version-specific logic**
@@ -98,7 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Dependencies
 - Added: `http: ^1.2.0` - HTTP client for API calls
 - Added: `permission_handler: ^11.3.1` - Permission handling untuk BLE
-- Required: `uuid: ^4.0.0` - For generating cart IDs (in consumer app)
 
 ### Documentation
 - Added comprehensive API integration guide

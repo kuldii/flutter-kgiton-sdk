@@ -10,9 +10,8 @@ Common issues and solutions for KGiTON SDK integration.
 2. [Android 10-11 Specific Issues](#android-10-11-specific-issues)
 3. [Permission Issues](#permission-issues)
 4. [API Integration Issues](#api-integration-issues)
-5. [Cart Issues](#cart-issues)
-6. [Weight Data Issues](#weight-data-issues)
-7. [Build/Compilation Issues](#buildcompilation-issues)
+5. [Weight Data Issues](#weight-data-issues)
+6. [Build/Compilation Issues](#buildcompilation-issues)
 
 ---
 
@@ -407,75 +406,6 @@ try {
 
 ---
 
-## Cart Issues
-
-### Cart Total Incorrect
-
-**Problem:**
-Total doesn't match expected value due to UPSERT behavior.
-
-**Explanation:**
-`addToCart()` **adds** quantity if item already exists (UPSERT logic).
-
-```dart
-// ❌ Wrong assumption
-await api.cart.addToCart(itemId: 'A', quantity: 2.0); // Item A = 2.0
-await api.cart.addToCart(itemId: 'A', quantity: 3.0); // Item A = 5.0 (ADDED!)
-
-// ✅ To set specific quantity, use updateCartItem
-await api.cart.updateCartItem(
-  cartItemId: cartItemId,
-  quantity: 3.0, // Sets to 3.0, not adds 3.0
-);
-```
-
-**See [CART_GUIDE.md](CART_GUIDE.md) for complete cart behavior.**
-
-### Cart Not Cleared After Checkout
-
-**Problem:**
-Using old SDK version without auto-clear feature.
-
-**Solution:**
-Update to SDK v1.1.0+ which auto-clears cart by default:
-
-```dart
-// v1.1.0+ auto-clears by default
-final result = await api.cart.processCart(
-  cartId: cartId,
-  licenseKey: licenseKey,
-  // autoClear: true (default)
-);
-
-// Cart already cleared ✅
-// Generate new cart ID
-cartId = Uuid().v4();
-```
-
-### "Cart is empty" Error
-
-**Causes:**
-
-1. **Cart was already processed/cleared**
-   - Generate new cart ID after checkout
-
-2. **No items added yet**
-   - Add items before viewing/processing
-
-**Solution:**
-```dart
-try {
-  final cart = await api.cart.viewCart(cartId, licenseKey);
-} on NotFoundException catch (e) {
-  if (e.message.contains('Cart is empty')) {
-    // Show empty cart UI
-    setState(() => _cartItems = []);
-  }
-}
-```
-
----
-
 ## Weight Data Issues
 
 ### No Weight Data Received
@@ -702,5 +632,4 @@ Collect this information:
 - **Getting Started**: [GETTING_STARTED.md](GETTING_STARTED.md)
 - **BLE Integration**: [BLE_INTEGRATION.md](BLE_INTEGRATION.md)
 - **API Integration**: [API_INTEGRATION.md](API_INTEGRATION.md)
-- **Cart Guide**: [CART_GUIDE.md](CART_GUIDE.md)
 - **Android 10-11**: [ANDROID_10_TROUBLESHOOTING.md](ANDROID_10_TROUBLESHOOTING.md)

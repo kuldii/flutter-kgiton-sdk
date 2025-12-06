@@ -6,7 +6,7 @@ Complete integration guide for KGiTON Flutter SDK - Clean and Simple.
 
 ## 📚 Documentation Structure
 
-The documentation has been simplified into **6 core guides**:
+The documentation has been simplified into **5 core guides**:
 
 ### 1. [GETTING_STARTED.md](GETTING_STARTED.md)
 **Complete setup guide from zero to first integration**
@@ -40,7 +40,6 @@ The documentation has been simplified into **6 core guides**:
 - Authentication (register, login, logout)
 - License management (Super Admin & Owner)
 - Item management (CRUD operations)
-- Cart operations (quick overview)
 - Transaction management
 - Error handling
 - Complete workflows
@@ -49,21 +48,7 @@ The documentation has been simplified into **6 core guides**:
 
 ---
 
-### 4. [CART_GUIDE.md](CART_GUIDE.md)
-**Complete shopping cart implementation guide**
-- Cart lifecycle and backend-first approach
-- UPSERT behavior (critical!)
-- Add/update/remove operations
-- Checkout with auto-clear (v1.1.0+)
-- Best practices
-- Common patterns
-- Troubleshooting
-
-👉 **Read this before implementing cart system**
-
----
-
-### 5. [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+### 4. [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 **Common issues and solutions**
 - BLE connection issues
 - Android 10-11 specific issues
@@ -77,7 +62,7 @@ The documentation has been simplified into **6 core guides**:
 
 ---
 
-### 6. [ANDROID_10_TROUBLESHOOTING.md](ANDROID_10_TROUBLESHOOTING.md)
+### 5. [ANDROID_10_TROUBLESHOOTING.md](ANDROID_10_TROUBLESHOOTING.md)
 **Detailed Android 10-11 BLE guide**
 - Why Location permission is required
 - Step-by-step permission setup
@@ -97,12 +82,12 @@ GETTING_STARTED → BLE_INTEGRATION → TROUBLESHOOTING
 
 ### Path 2: Backend API Only
 ```
-GETTING_STARTED → API_INTEGRATION → CART_GUIDE → TROUBLESHOOTING
+GETTING_STARTED → API_INTEGRATION → TROUBLESHOOTING
 ```
 
 ### Path 3: Complete Integration (BLE + API)
 ```
-GETTING_STARTED → BLE_INTEGRATION → API_INTEGRATION → CART_GUIDE → TROUBLESHOOTING
+GETTING_STARTED → BLE_INTEGRATION → API_INTEGRATION → TROUBLESHOOTING
 ```
 
 ---
@@ -135,28 +120,16 @@ GETTING_STARTED → BLE_INTEGRATION → API_INTEGRATION → CART_GUIDE → TROUB
 - ✅ Authentication flow (register, login, logout)
 - ✅ Super Admin operations (license management)
 - ✅ Owner operations (items, licenses)
-- ✅ Cart operations (overview)
 - ✅ Transaction management
 - ✅ Error handling (all exception types)
 - ✅ Complete workflows (3 real-world examples)
 - ✅ Best practices (retry logic, pagination)
-
-### CART_GUIDE.md
-- ✅ Backend-first approach
-- ✅ Cart ID lifecycle
-- ✅ UPSERT behavior (critical!)
-- ✅ Add/update/remove operations
-- ✅ Auto-clear checkout (v1.1.0+)
-- ✅ Best practices (DO and DON'T)
-- ✅ Common patterns
-- ✅ Complete workflow examples
 
 ### TROUBLESHOOTING.md
 - ✅ BLE issues (connection, scan, disconnection)
 - ✅ Android 10-11 issues (location requirement)
 - ✅ Permission issues
 - ✅ API errors (401, 404, 429, etc.)
-- ✅ Cart issues (UPSERT, auto-clear)
 - ✅ Weight data issues
 - ✅ Build errors
 - ✅ Error code quick reference
@@ -173,7 +146,6 @@ GETTING_STARTED → BLE_INTEGRATION → API_INTEGRATION → CART_GUIDE → TROUB
 
 ## 🆕 What's New in v1.1.0
 
-- ✅ **Auto-Clear Cart**: `processCart()` now auto-clears by default
 - ✅ **Payment Method**: Optional parameter in checkout
 - ✅ **Order Notes**: Optional notes parameter
 - ✅ **Enhanced Models**: Nullable fields support
@@ -217,7 +189,6 @@ Features:
 - Real-time weight display
 - Buzzer control
 - API integration
-- Cart management
 - Transaction history
 
 ---
@@ -274,7 +245,7 @@ Features:
 
 ## 🔄 Version History
 
-- **v1.1.0** (Current) - Auto-clear cart, enhanced models
+- **v1.1.0** (Current) - Enhanced models, improved API
 - **v1.0.0** - Initial release with BLE + API
 
 See [../CHANGELOG.md](../CHANGELOG.md) for full changelog.

@@ -527,80 +527,7 @@ Future<void> login(String email, String password) async {
 }
 ```
 
-#### 2. Shopping Cart
-
-```dart
-class CartManager {
-  final KgitonApiService apiService;
-  final String licenseKey;
-  late String cartId;
-  
-  CartManager({
-    required this.apiService,
-    required this.licenseKey,
-  }) {
-    cartId = Uuid().v4();
-  }
-  
-  // Add item to cart (UPSERT: adds quantity if exists)
-  Future<void> addItem(String itemId, double quantity) async {
-    try {
-      await apiService.cart.addToCart(
-        cartId: cartId,
-        licenseKey: licenseKey,
-        itemId: itemId,
-        quantity: quantity,
-      );
-      
-      print('✅ Added to cart');
-    } catch (e) {
-      print('❌ Failed to add: $e');
-      rethrow;
-    }
-  }
-  
-  // View cart
-  Future<CartData> viewCart() async {
-    try {
-      return await apiService.cart.viewCart(
-        cartId: cartId,
-        licenseKey: licenseKey,
-      );
-    } catch (e) {
-      print('❌ Failed to view cart: $e');
-      rethrow;
-    }
-  }
-  
-  // Checkout (v1.1.0: auto-clears)
-  Future<ProcessCartData> checkout({
-    String? paymentMethod,
-    String? notes,
-  }) async {
-    try {
-      final result = await apiService.cart.processCart(
-        cartId: cartId,
-        licenseKey: licenseKey,
-        paymentMethod: paymentMethod ?? 'cash',
-        notes: notes,
-        // autoClear: true (default) - Cart auto-cleared!
-      );
-      
-      print('✅ Transaction: ${result.transactionId}');
-      
-      // Generate new cart ID for next session
-      cartId = Uuid().v4();
-      
-      return result;
-    } catch (e) {
-      print('❌ Checkout failed: $e');
-      rethrow;
-    }
-  }
-}
-```
-
-#### 3. Item Management
+#### 2. Item Management
 
 ```dart
 // Load items for license
@@ -1054,7 +981,6 @@ flutter run
 - [Getting Started](docs_integrations/GETTING_STARTED.md)
 - [BLE Integration](docs_integrations/BLE_INTEGRATION.md)
 - [API Integration](docs_integrations/API_INTEGRATION.md)
-- [Cart Guide](docs_integrations/CART_GUIDE.md)
 - [Troubleshooting](docs_integrations/TROUBLESHOOTING.md)
 
 **Support:**
@@ -1074,7 +1000,6 @@ flutter run
 2. **Add API Integration**
    - ✅ User login
    - ✅ Load items
-   - ✅ Shopping cart
 
 3. **Implement UI/UX**
    - ✅ Material Design 3

@@ -248,7 +248,7 @@ void _onStableWeight(double weight) {
   // Trigger buzzer feedback
   sdk.triggerBuzzer('BEEP');
   
-  // Auto-add to cart, etc.
+  // Process stable weight as needed
 }
 ```
 
@@ -301,7 +301,7 @@ await sdk.triggerBuzzer('OFF');
 // Success feedback
 Future<void> onItemAdded() async {
   await sdk.triggerBuzzer('BEEP');
-  showSnackBar('Item added to cart');
+  showSnackBar('Item added successfully');
 }
 
 // Error feedback
@@ -393,7 +393,7 @@ void dispose() {
 ### 2. Check Connection State Before Operations
 
 ```dart
-Future<void> addToCart() async {
+Future<void> processWeight() async {
   if (!sdk.isAuthenticated) {
     showError('Please connect to scale first');
     return;
@@ -401,6 +401,7 @@ Future<void> addToCart() async {
   
   // Proceed with operation
   final weight = _currentWeight;
+  print('Processing weight: $weight kg');
   // ...
 }
 ```
@@ -598,5 +599,4 @@ See [example/lib/main.dart](../example/lib/main.dart) for a complete working imp
 ## Next Steps
 
 - **API Integration**: Learn how to sync data with backend - [API_INTEGRATION.md](API_INTEGRATION.md)
-- **Cart System**: Implement shopping cart - [CART_GUIDE.md](CART_GUIDE.md)
 - **Troubleshooting**: Common issues and solutions - [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
