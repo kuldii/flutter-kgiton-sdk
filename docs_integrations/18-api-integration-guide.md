@@ -370,6 +370,13 @@ final cartId = uuid.v4(); // Generate UUID v4
 
 ### Add Item to Cart
 
+⚠️ **Important**: If the same item already exists in the cart, the backend will **ADD** the new quantity to the existing quantity (UPSERT behavior).
+
+**Example:**
+- First add: Item A with quantity 5.0 → Cart has Item A (5.0)
+- Second add: Item A with quantity 3.0 → Cart has Item A (8.0) ✅
+- The backend ensures one item appears only once per cart with cumulative quantity
+
 ```dart
 final cartItem = await apiService.cart.addToCart(
   cartId: cartId,
@@ -380,8 +387,20 @@ final cartItem = await apiService.cart.addToCart(
 );
 
 print('Added: ${cartItem.item.name}');
-print('Quantity: ${cartItem.quantity}');
+print('Quantity: ${cartItem.quantity}'); // Total quantity (including previous)
 print('Total: Rp ${cartItem.totalPrice}');
+```
+
+💡 **Best Practice**: After adding to cart, reload cart data from backend to ensure local state is synchronized:
+
+```dart
+// Add item
+await apiService.cart.addToCart(...);
+
+// Reload cart to get accurate data
+final cartData = await apiService.cart.viewCart(cartId: cartId);
+
+// Update local UI with cartData.items
 ```
 
 ### View Cart
@@ -432,11 +451,13 @@ print('Cart cleared');
 
 ### Process Cart & Checkout
 
-💡 **Best Practice**: Clear cart after successful checkout using `clearCartByLicense()`.
+✅ **Simplified**: The SDK automatically clears cart after successful transaction creation.
+
+**Complete Checkout Flow:**
 
 ```dart
 try {
-  // 1. Process cart (create transaction)
+  // Process cart - SDK will automatically clear cart after success
   final result = await apiService.cart.processCart(
     cartId: cartId,
     licenseKey: 'LICENSE-KEY',
@@ -447,28 +468,56 @@ try {
   print('Processing Fee: Rp ${result.processingFee}');
   print('Total: Rp ${result.total}');
   print('Items: ${result.itemCount}');
-
-  // 2. Clear cart after successful checkout (recommended)
-  await apiService.cart.clearCartByLicense(
-    licenseKey: 'LICENSE-KEY',
-  );
   
-  print('Cart cleared successfully');
-
-  // 3. Update local state
-  // Clear local cart items, reset UI, etc.
+  // Cart is already cleared from backend ✅
+  
+  // Just update local state
+  setState(() {
+    _cartItems.clear(); // Clear local cart
+  });
+  
+  // Show success message
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Checkout Successful!'),
+      content: Text('Transaction ID: ${result.transactionId}'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('OK'),
+        ),
+      ],
+    ),
+  );
 
 } catch (e) {
   print('Checkout failed: $e');
-  // Don't clear cart on error - user can retry
+  // ❌ Cart NOT cleared on error - user can retry
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Checkout Failed'),
+      content: Text(e.toString()),
+    ),
+  );
 }
 ```
 
-### Clear Cart by License Key
+**Why Auto-Clear?**
+- ✅ Simpler API - no need to manually clear cart
+- ✅ Prevents developer errors (forgetting to clear)
+- ✅ Cart only cleared on success (safe error handling)
+- ✅ Consistent behavior across all apps
 
-Clear all cart items for a specific license. This is the recommended approach after checkout.
+### Clear Cart by License Key (Manual)
+
+⚠️ **Note**: You typically don't need this. `processCart()` automatically clears cart.
+
+Use this only if you need to manually clear cart without processing (e.g., user wants to cancel/reset):
 
 ```dart
+// Manual clear without creating transaction
 await apiService.cart.clearCartByLicense(
   licenseKey: 'LICENSE-KEY',
 );

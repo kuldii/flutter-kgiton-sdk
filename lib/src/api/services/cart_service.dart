@@ -152,29 +152,15 @@ class KgitonCartService {
 
   /// Clear all cart items for a specific license key
   ///
-  /// 💡 RECOMMENDED: Call this after successful `processCart()` to clear the cart.
-  /// This is useful to clean up cart data after completing a transaction.
+  /// ⚠️ **Note**: You typically don't need to call this manually.
+  /// The `processCart()` method automatically clears the cart after successful transaction.
   ///
   /// [licenseKey] - License key to clear carts for
   ///
-  /// Complete checkout flow example:
+  /// Use this method only if you need to manually clear cart without processing:
   /// ```dart
-  /// try {
-  ///   // 1. Process cart (create transaction)
-  ///   final transaction = await cartService.processCart(
-  ///     cartId: cartId,
-  ///     licenseKey: licenseKey,
-  ///   );
-  ///
-  ///   // 2. Clear cart after successful checkout (recommended)
-  ///   await cartService.clearCartByLicense(licenseKey: licenseKey);
-  ///
-  ///   // 3. Update local state and show success
-  ///   print('Transaction created: ${transaction.transactionId}');
-  /// } catch (e) {
-  ///   // Don't clear cart on error - user can retry
-  ///   print('Checkout failed: $e');
-  /// }
+  /// // Clear cart without creating transaction (e.g., user wants to start over)
+  /// await cartService.clearCartByLicense(licenseKey: licenseKey);
   /// ```
   ///
   /// Throws:
@@ -196,15 +182,34 @@ class KgitonCartService {
   ///
   /// Returns [ProcessCartData] containing transaction details
   ///
-  /// 💡 IMPORTANT: Backend does NOT auto-clear cart after creating transaction.
-  /// You should manually call `clearCartByLicense()` after successful checkout.
+  /// ✅ This method automatically clears the cart after successful transaction creation.
   ///
   /// This method will:
-  /// - Create a transaction with all cart items
-  /// - Add processing fee
-  /// - Return transaction details
+  /// 1. Create a transaction with all cart items
+  /// 2. Add processing fee
+  /// 3. **Automatically clear cart** from backend (using clearCartByLicense)
+  /// 4. Return transaction details
   ///
-  /// For complete checkout flow, see `clearCartByLicense()` documentation.
+  /// If transaction creation fails, cart will NOT be cleared (user can retry).
+  ///
+  /// Example:
+  /// ```dart
+  /// try {
+  ///   final result = await cartService.processCart(
+  ///     cartId: cartId,
+  ///     licenseKey: licenseKey,
+  ///   );
+  ///
+  ///   // Cart is already cleared from backend ✅
+  ///   print('Transaction: ${result.transactionId}');
+  ///
+  ///   // Just clear local state
+  ///   setState(() => _cartItems.clear());
+  /// } catch (e) {
+  ///   print('Checkout failed: $e');
+  ///   // Cart NOT cleared - user can retry
+  /// }
+  /// ```
   ///
   /// Throws:
   /// - [KgitonAuthenticationException] if not authenticated
@@ -224,6 +229,9 @@ class KgitonCartService {
     if (!response.success || response.data == null) {
       throw Exception('Failed to process cart: ${response.message}');
     }
+
+    // Automatically clear cart after successful transaction
+    await clearCartByLicense(licenseKey: licenseKey);
 
     return response.data!;
   }

@@ -184,20 +184,16 @@ await apiService.cart.addToCart(
 
 // Complete checkout flow
 try {
-  // 1. Process cart
+  // Process cart - SDK automatically clears cart on success
   final result = await apiService.cart.processCart(
     cartId: cartId,
     licenseKey: 'LICENSE-KEY',
   );
   
-  // 2. Clear cart after successful checkout (recommended)
-  await apiService.cart.clearCartByLicense(
-    licenseKey: 'LICENSE-KEY',
-  );
-  
+  // Cart already cleared from backend ✅
   print('Transaction: ${result.transactionId}');
 } catch (e) {
-  // Don't clear on error - user can retry
+  // Cart NOT cleared on error - user can retry
 }
 ```
 
