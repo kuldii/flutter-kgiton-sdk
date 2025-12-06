@@ -78,11 +78,41 @@ class CurrentUserData {
 
   CurrentUserData({required this.user, required this.profile});
 
-  factory CurrentUserData.fromJson(Map<String, dynamic> json) {
-    return CurrentUserData(
-      user: User.fromJson(json['user'] as Map<String, dynamic>),
-      profile: UserProfile.fromJson(json['profile'] as Map<String, dynamic>),
-    );
+  factory CurrentUserData.fromJson(dynamic json) {
+    if (json is! Map<String, dynamic>) {
+      throw FormatException('Invalid CurrentUserData format: expected Map, got ${json.runtimeType}');
+    }
+
+    // Check if response has nested 'user' and 'profile' keys
+    if (json.containsKey('user') && json.containsKey('profile')) {
+      return CurrentUserData(
+        user: User.fromJson(json['user'] as Map<String, dynamic>),
+        profile: UserProfile.fromJson(json['profile'] as Map<String, dynamic>),
+      );
+    }
+
+    // Handle flat structure where user and profile data are mixed
+    // Try to extract user fields (id, email)
+    if (json.containsKey('id') && json.containsKey('email')) {
+      final user = User(
+        id: json['id'] as String,
+        email: json['email'] as String,
+      );
+
+      // Extract profile fields
+      final profile = UserProfile(
+        userId: json['user_id'] as String? ?? json['id'] as String,
+        role: json['role'] as String,
+        entityType: json['entity_type'] as String,
+        name: json['name'] as String,
+        fullName: json['full_name'] as String?,
+        companyName: json['company_name'] as String?,
+      );
+
+      return CurrentUserData(user: user, profile: profile);
+    }
+
+    throw FormatException('Invalid CurrentUserData format: missing required fields');
   }
 
   Map<String, dynamic> toJson() {

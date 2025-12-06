@@ -94,17 +94,27 @@ class KgitonAuthService {
   /// - [KgitonAuthenticationException] if not authenticated or token expired
   /// - [KgitonApiException] for other errors
   Future<CurrentUserData> getCurrentUser() async {
-    final response = await _client.get<CurrentUserData>(
-      KgitonApiEndpoints.getCurrentUser,
-      requiresAuth: true,
-      fromJsonT: (json) => CurrentUserData.fromJson(json as Map<String, dynamic>),
-    );
+    try {
+      final response = await _client.get<CurrentUserData>(
+        KgitonApiEndpoints.getCurrentUser,
+        requiresAuth: true,
+        fromJsonT: (json) {
+          // Debug: Print the raw JSON structure
+          print('[AuthService] getCurrentUser - Raw JSON type: ${json.runtimeType}');
+          print('[AuthService] getCurrentUser - Raw JSON: $json');
+          return CurrentUserData.fromJson(json);
+        },
+      );
 
-    if (!response.success || response.data == null) {
-      throw Exception('Failed to get current user: ${response.message}');
+      if (!response.success || response.data == null) {
+        throw Exception('Failed to get current user: ${response.message}');
+      }
+
+      return response.data!;
+    } catch (e) {
+      print('[AuthService] getCurrentUser - Error: $e');
+      rethrow;
     }
-
-    return response.data!;
   }
 
   /// Logout user
