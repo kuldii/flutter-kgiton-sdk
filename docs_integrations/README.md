@@ -1,211 +1,284 @@
-# KGiTON SDK - Complete Integration Guide
+# KGiTON SDK Documentation
 
-Welcome to the **KGiTON SDK Integration Documentation**! This comprehensive guide will walk you through every step of integrating the KGiTON BLE Scale SDK into your Flutter project.
+Complete integration guide for KGiTON Flutter SDK - Clean and Simple.
 
 ---
 
 ## 📚 Documentation Structure
 
-This documentation is organized into the following sections:
+The documentation has been simplified into **6 core guides**:
 
-### Getting Started
-1. **[Prerequisites](01-prerequisites.md)** - System requirements and tools needed
-2. **[Authorization & Licensing](02-authorization.md)** - How to obtain and activate your license
-3. **[Installation](03-installation.md)** - Adding the SDK to your project
+### 1. [GETTING_STARTED.md](GETTING_STARTED.md)
+**Complete setup guide from zero to first integration**
+- Prerequisites and platform requirements
+- Installation steps
+- Android & iOS platform configuration
+- Permissions setup
+- API configuration
+- First integration test code
 
-### Integration Steps
-4. **[Platform Setup](04-platform-setup.md)** - Configure Android and iOS platforms
-5. **[Permissions Setup](05-permissions-setup.md)** - Handling BLE permissions
-6. **[Basic Integration](06-basic-integration.md)** - Your first integration
-7. **[Advanced Features](07-advanced-features.md)** - Advanced usage patterns
-
-### Deep Dive
-8. **[API Reference](08-api-reference.md)** - Complete API documentation
-9. **[Error Handling](09-error-handling.md)** - Exception types and handling
-10. **[Best Practices](10-best-practices.md)** - Recommended patterns and practices
-11. **[Troubleshooting](11-troubleshooting.md)** - Common issues and solutions
-
-### Practical Examples
-12. **[Complete Examples](12-complete-examples.md)** - Real-world integration examples
-13. **[UI Components](13-ui-components.md)** - Ready-to-use UI widgets
-14. **[Testing Guide](14-testing-guide.md)** - How to test your integration
-
-### Additional Resources
-15. **[Migration Guide](15-migration-guide.md)** - Migrating from older versions
-16. **[FAQ](16-faq.md)** - Frequently asked questions
-17. **[Glossary](17-glossary.md)** - Terms and definitions
-
-### API Integration (Backend)
-18. **[API Integration Guide](18-api-integration-guide.md)** - Complete API integration guide
-19. **[API Configuration Guide](19-api-configuration-guide.md)** - How to configure API endpoints
-20. **[API Quick Reference](20-api-quick-reference.md)** - Quick cheat sheet for API
+👉 **Start here if you're new to KGiTON SDK**
 
 ---
 
-## 🚀 Quick Start Path
+### 2. [BLE_INTEGRATION.md](BLE_INTEGRATION.md)
+**Complete BLE scale integration guide**
+- Basic integration (scan, connect, disconnect)
+- Connection state management
+- Real-time weight data streaming (~10 Hz)
+- Buzzer control (BEEP, BUZZ, LONG, OFF)
+- Error handling
+- Best practices
+- Complete API reference
 
-If you're new to KGiTON SDK, follow this path:
+👉 **Read this to integrate BLE scale devices**
 
+---
+
+### 3. [API_INTEGRATION.md](API_INTEGRATION.md)
+**Complete backend API integration guide**
+- Authentication (register, login, logout)
+- License management (Super Admin & Owner)
+- Item management (CRUD operations)
+- Cart operations (quick overview)
+- Transaction management
+- Error handling
+- Complete workflows
+
+👉 **Read this to integrate backend API**
+
+---
+
+### 4. [CART_GUIDE.md](CART_GUIDE.md)
+**Complete shopping cart implementation guide**
+- Cart lifecycle and backend-first approach
+- UPSERT behavior (critical!)
+- Add/update/remove operations
+- Checkout with auto-clear (v1.1.0+)
+- Best practices
+- Common patterns
+- Troubleshooting
+
+👉 **Read this before implementing cart system**
+
+---
+
+### 5. [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+**Common issues and solutions**
+- BLE connection issues
+- Android 10-11 specific issues
+- Permission problems
+- API integration errors
+- Cart issues
+- Weight data problems
+- Build/compilation errors
+
+👉 **Check here when you encounter issues**
+
+---
+
+### 6. [ANDROID_10_TROUBLESHOOTING.md](ANDROID_10_TROUBLESHOOTING.md)
+**Detailed Android 10-11 BLE guide**
+- Why Location permission is required
+- Step-by-step permission setup
+- Location Services requirement
+- Complete code examples
+
+👉 **Essential for Android 10-11 support**
+
+---
+
+## 🚀 Quick Start Paths
+
+### Path 1: BLE Scale Only
 ```
-Prerequisites → Authorization → Installation → Platform Setup → 
-Permissions Setup → Basic Integration → Complete Examples
+GETTING_STARTED → BLE_INTEGRATION → TROUBLESHOOTING
 ```
 
-**Estimated Time**: 30-45 minutes for basic integration
+### Path 2: Backend API Only
+```
+GETTING_STARTED → API_INTEGRATION → CART_GUIDE → TROUBLESHOOTING
+```
+
+### Path 3: Complete Integration (BLE + API)
+```
+GETTING_STARTED → BLE_INTEGRATION → API_INTEGRATION → CART_GUIDE → TROUBLESHOOTING
+```
 
 ---
 
-## 💡 What You'll Learn
+## 📖 What's Covered in Each Guide
 
-By the end of this guide, you will be able to:
+### GETTING_STARTED.md
+- ✅ Prerequisites (Flutter, Dart, platform versions)
+- ✅ Installation (pubspec.yaml)
+- ✅ Android configuration (build.gradle, manifest)
+- ✅ iOS configuration (Info.plist, Podfile)
+- ✅ Permission setup (runtime permissions)
+- ✅ API service initialization
+- ✅ First integration test (complete example)
 
-- ✅ Set up your Flutter project with KGiTON SDK
-- ✅ Configure Android and iOS platforms correctly
-- ✅ Implement BLE device scanning and filtering
-- ✅ Connect to KGiTON scale devices with license authentication
-- ✅ Receive and process real-time weight data streams
-- ✅ Control device buzzer for user feedback
-- ✅ Handle connection states and errors gracefully
-- ✅ Build production-ready scale integration apps
+### BLE_INTEGRATION.md
+- ✅ SDK initialization and disposal
+- ✅ Device scanning
+- ✅ Connection management
+- ✅ Auto-reconnect pattern
+- ✅ Weight data streaming
+- ✅ Stable weight detection
+- ✅ Throttling updates
+- ✅ Buzzer control
+- ✅ Exception handling
+- ✅ Best practices
+- ✅ Complete API reference
+
+### API_INTEGRATION.md
+- ✅ Authentication flow (register, login, logout)
+- ✅ Super Admin operations (license management)
+- ✅ Owner operations (items, licenses)
+- ✅ Cart operations (overview)
+- ✅ Transaction management
+- ✅ Error handling (all exception types)
+- ✅ Complete workflows (3 real-world examples)
+- ✅ Best practices (retry logic, pagination)
+
+### CART_GUIDE.md
+- ✅ Backend-first approach
+- ✅ Cart ID lifecycle
+- ✅ UPSERT behavior (critical!)
+- ✅ Add/update/remove operations
+- ✅ Auto-clear checkout (v1.1.0+)
+- ✅ Best practices (DO and DON'T)
+- ✅ Common patterns
+- ✅ Complete workflow examples
+
+### TROUBLESHOOTING.md
+- ✅ BLE issues (connection, scan, disconnection)
+- ✅ Android 10-11 issues (location requirement)
+- ✅ Permission issues
+- ✅ API errors (401, 404, 429, etc.)
+- ✅ Cart issues (UPSERT, auto-clear)
+- ✅ Weight data issues
+- ✅ Build errors
+- ✅ Error code quick reference
+
+### ANDROID_10_TROUBLESHOOTING.md
+- ✅ Why Android 10-11 is different
+- ✅ Location permission requirement
+- ✅ Location Services requirement
+- ✅ Complete manifest setup
+- ✅ Permission request code
+- ✅ User education examples
 
 ---
 
-## 📋 Before You Begin
+## 🆕 What's New in v1.1.0
 
-### Required Knowledge
+- ✅ **Auto-Clear Cart**: `processCart()` now auto-clears by default
+- ✅ **Payment Method**: Optional parameter in checkout
+- ✅ **Order Notes**: Optional notes parameter
+- ✅ **Enhanced Models**: Nullable fields support
+- ✅ **Better Debugging**: Comprehensive error logging
 
-- Basic Flutter/Dart programming
-- Understanding of asynchronous programming (Futures, Streams)
-- Familiarity with Material Design widgets
-- Basic understanding of BLE concepts (optional but helpful)
-
-### What You'll Need
-
-- Flutter SDK 3.3.0 or higher
-- Valid KGiTON SDK license key
-- Physical KGiTON scale device for testing
-- Android device (API 21+) or iOS device (iOS 12.0+)
+See [../CHANGELOG.md](../CHANGELOG.md) for full details.
 
 ---
 
-## 🎯 Integration Scenarios
+## 💡 Tips for Reading Documentation
 
-Choose the scenario that matches your use case:
+### Icons Used
+- 👉 Recommended next step
+- ✅ Feature/topic covered
+- ⚠️ Important warning
+- ❌ Don't do this
+- 📧 Contact information
 
-### Scenario 1: Simple Weight Display
-**Goal**: Display weight from a scale in your app  
-**Time**: ~30 minutes  
-**Docs**: [Prerequisites](01-prerequisites.md) → [Basic Integration](06-basic-integration.md)
+### Code Blocks
+- All examples are copy-paste ready
+- Complete context provided
+- Error handling included
 
-### Scenario 2: Multi-Device Management
-**Goal**: Connect and manage multiple scales  
-**Time**: ~1 hour  
-**Docs**: [Basic Integration](06-basic-integration.md) → [Advanced Features](07-advanced-features.md)
-
-### Scenario 3: Production App
-**Goal**: Build a complete commercial application  
-**Time**: ~2-3 hours  
-**Docs**: Follow all sections + [Best Practices](10-best-practices.md)
+### Navigation
+- Each guide links to related guides
+- "Next Steps" section at the end
+- Clear Table of Contents in each guide
 
 ---
 
-## 📖 How to Use This Guide
+## 📦 Example App
 
-### Reading Order
+Complete working example with Material Design 3 UI:
+```
+../example/lib/main.dart
+```
 
-1. **Sequential**: Read from start to finish for complete understanding
-2. **Scenario-based**: Jump to specific sections based on your use case
-3. **Reference**: Use as a quick reference when needed
+Features:
+- BLE device scanning
+- Connection management
+- Real-time weight display
+- Buzzer control
+- API integration
+- Cart management
+- Transaction history
 
-### Code Examples
+---
 
-All code examples are:
-- ✅ **Production-ready** - Can be used directly in your app
-- ✅ **Tested** - Verified to work with the SDK
-- ✅ **Commented** - Includes explanations
-- ✅ **Complete** - No missing imports or context
+## 🔐 Authorization & Security
 
-### Conventions
-
-- 📱 **Platform-specific** instructions are marked
-- ⚠️ **Important warnings** are highlighted
-- 💡 **Tips and best practices** are indicated
-- 🔒 **Security-related** information is emphasized
+- **License Required**: See [../AUTHORIZATION.md](../AUTHORIZATION.md)
+- **Security Policy**: See [../SECURITY.md](../SECURITY.md)
+- **Contact**: support@kgiton.com
 
 ---
 
 ## 🆘 Getting Help
 
-### Documentation Issues
+### Before Asking
+1. Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+2. Read relevant integration guide
+3. Review example app code
+4. Collect error messages and logs
 
-If you find errors or missing information in this documentation:
-1. Check the [FAQ](16-faq.md) first
-2. Review [Troubleshooting](11-troubleshooting.md)
-3. Contact support: support@kgiton.com
+### Contact Support
+📧 **Email**: support@kgiton.com
 
-### Technical Support
-
-For authorized users:
-- 📧 Email: support@kgiton.com
-- 🌐 Website: https://kgiton.com
-- 📱 GitHub Issues: [Report Bug](https://github.com/kuldii/flutter-kgiton-sdk/issues)
-
-**Response Time**: Within 24 hours (business days)
-
----
-
-## 📄 License Notice
-
-**⚠️ PROPRIETARY SOFTWARE**
-
-This SDK is commercial software owned by PT KGiTON. Use requires explicit authorization.
-
-Before proceeding, ensure you have:
-- ✅ Read and accepted the [License Agreement](../LICENSE)
-- ✅ Obtained a valid license key from PT KGiTON
-- ✅ Reviewed the [Authorization Guide](02-authorization.md)
-
-Unauthorized use is prohibited and may result in legal action.
+**Include**:
+- SDK version (check pubspec.lock)
+- Platform & OS version
+- Flutter/Dart version
+- Error messages with stack trace
+- Steps to reproduce
 
 ---
 
-## 🎓 Learning Resources
+## 📝 Documentation Philosophy
 
-### Official Resources
-- [Example App](../example/) - Complete working example
-- [API Documentation](08-api-reference.md) - Full API reference
-- [Changelog](../CHANGELOG.md) - Version history
+**Clean & Simple:**
+- No redundant information
+- Clear structure
+- Practical examples
+- Copy-paste ready code
 
-### External Resources
-- [Flutter Documentation](https://docs.flutter.dev/)
-- [Bluetooth Low Energy Basics](https://www.bluetooth.com/learn-about-bluetooth/tech-overview/)
-- [Dart Streams Guide](https://dart.dev/tutorials/language/streams)
+**Comprehensive:**
+- All features documented
+- Real-world workflows
+- Error handling covered
+- Best practices included
 
----
-
-## 🔄 Documentation Version
-
-- **SDK Version**: 1.1.0
-- **Last Updated**: December 3, 2025
-- **Flutter Compatibility**: ≥3.3.0
-- **Platform Support**: Android (API 21+), iOS (12.0+)
-
----
-
-## 📌 Next Steps
-
-Ready to begin? Start with:
-
-👉 **[1. Prerequisites](01-prerequisites.md)** - Check if you have everything needed
-
-Or jump directly to:
-
-- [Installation Guide](03-installation.md) - If you're ready to install
-- [Basic Integration](06-basic-integration.md) - If SDK is already installed
-- [Complete Examples](12-complete-examples.md) - If you want to see working code first
+**Easy to Navigate:**
+- Clear table of contents
+- Cross-references between guides
+- Quick start paths
+- Complete examples
 
 ---
 
-**Let's get started! 🚀**
+## 🔄 Version History
 
-© 2025 PT KGiTON. All rights reserved.
+- **v1.1.0** (Current) - Auto-clear cart, enhanced models
+- **v1.0.0** - Initial release with BLE + API
+
+See [../CHANGELOG.md](../CHANGELOG.md) for full changelog.
+
+---
+
+**Ready to start?** → [GETTING_STARTED.md](GETTING_STARTED.md)

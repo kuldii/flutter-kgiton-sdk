@@ -5,6 +5,38 @@ All notable changes to the KGiTON SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-12-06
+
+### Added - Cart Enhancement
+- **NEW**: `processCart()` now supports `autoClear` parameter (default: `true`)
+- **NEW**: `processCart()` supports optional `paymentMethod` parameter
+- **NEW**: `processCart()` supports optional `notes` parameter
+- **NEW**: Cart auto-clears after successful transaction (when `autoClear=true`)
+
+### Changed - Cart Models
+- **BREAKING**: Cart models now support nullable fields from backend:
+  - `CartItem.updatedAt` - Now optional (`DateTime?`)
+  - `CartItemInfo.price` - Now optional (`double?`)
+  - `CartSummary.processingFee` - Now optional (`double?`)
+  - `CartSummary.grandTotal` - Now optional (`double?`)
+- **IMPROVED**: All cart models now have comprehensive error handling in `fromJson()`
+- **IMPROVED**: Debug logging added to help diagnose parsing errors
+
+### Changed - Documentation
+- **UPDATED**: `22-cart-logic-guide.md` with auto-clear behavior
+- **UPDATED**: Complete examples for checkout with/without auto-clear
+- **UPDATED**: UPSERT behavior clarified with more examples
+- **UPDATED**: Best practices updated to reflect auto-clear feature
+
+### Fixed
+- Fixed cart button always disabled issue (now enables when authenticated)
+- Fixed type cast errors from backend responses with nullable fields
+
+### Migration Notes
+- Default behavior: Cart now auto-clears after `processCart()` - no need to call `clearCartByLicense()`
+- If you need manual control, set `autoClear: false` in `processCart()`
+- Remove any manual `clearCartByLicense()` calls after `processCart()` (redundant)
+
 ## [1.0.0] - 2025-12-06
 
 ### Initial Release - Complete SDK with BLE & API Integration

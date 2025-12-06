@@ -11,20 +11,33 @@ Official Flutter SDK for integrating with KGiTON BLE scale devices.
 
 > **⚠️ PROPRIETARY SOFTWARE**: This SDK is commercial software owned by PT KGiTON. Use requires explicit authorization. See [AUTHORIZATION.md](AUTHORIZATION.md) for licensing information.
 
+## 🆕 What's New in v1.1.0
+
+- ✅ **Auto-Clear Cart**: `processCart()` now automatically clears cart after successful transaction
+- ✅ **Payment Method**: Optional `paymentMethod` parameter for checkout
+- ✅ **Order Notes**: Optional `notes` parameter for checkout
+- ✅ **Enhanced Models**: Cart models now support nullable fields from backend
+- ✅ **Better Debugging**: Comprehensive error logging for API parsing issues
+
+See [CHANGELOG.md](CHANGELOG.md) for full details.
+
 ## 📖 Documentation
 
-### Quick Links
+### Core Documentation (New Structure!)
 
-- 📘 [Authorization Guide](AUTHORIZATION.md) - How to obtain license
-- 📗 [Security Policy](SECURITY.md) - Security and vulnerability reporting
-- 📔 [Changelog](CHANGELOG.md) - Version history
-- 📚 [Complete Documentation](docs_integrations/) - Full integration guide
-- 🔧 [Example App](example/) - Complete working example
+- 📘 [Getting Started](docs_integrations/GETTING_STARTED.md) - Complete setup guide
+- 🔵 [BLE Integration](docs_integrations/BLE_INTEGRATION.md) - Scale device integration
+- 🌐 [API Integration](docs_integrations/API_INTEGRATION.md) - Backend API guide
+- 🛒 [Cart Guide](docs_integrations/CART_GUIDE.md) - Shopping cart implementation
+- ⚠️ [Troubleshooting](docs_integrations/TROUBLESHOOTING.md) - Common issues & solutions
+- 📱 [Android 10-11 Guide](docs_integrations/ANDROID_10_TROUBLESHOOTING.md) - Android specific
 
-### API Documentation
-- 🚀 [API Integration Guide](docs_integrations/18-api-integration-guide.md) - Complete API guide
-- ⚙️ [API Configuration](docs_integrations/19-api-configuration-guide.md) - How to configure endpoints
-- 📋 [API Quick Reference](docs_integrations/20-api-quick-reference.md) - Quick cheat sheet
+### Additional Resources
+
+- 📗 [Authorization Guide](AUTHORIZATION.md) - How to obtain license
+- 🛡️ [Security Policy](SECURITY.md) - Security and vulnerability reporting
+- 📔 [Changelog](CHANGELOG.md) - Version history and updates
+- 🔧 [Example App](example/) - Complete working example with UI
 
 ## Features
 
@@ -182,18 +195,25 @@ await apiService.cart.addToCart(
   quantity: 5.5,
 );
 
-// Complete checkout flow
+// Process cart (v1.1.0+: auto-clears by default)
 try {
-  // Process cart - SDK automatically clears cart on success
   final result = await apiService.cart.processCart(
     cartId: cartId,
     licenseKey: 'LICENSE-KEY',
+    paymentMethod: 'qris',      // Optional
+    notes: 'Mobile order',      // Optional
+    // autoClear: true (default) - Cart cleared automatically!
   );
   
-  // Cart already cleared from backend ✅
-  print('Transaction: ${result.transactionId}');
+  print('✅ Transaction: ${result.transactionId}');
+  print('✅ Cart auto-cleared by backend');
+  
+  // Generate new cart ID for next session
+  cartId = Uuid().v4();
+  
 } catch (e) {
   // Cart NOT cleared on error - user can retry
+  print('❌ Checkout failed: $e');
 }
 ```
 

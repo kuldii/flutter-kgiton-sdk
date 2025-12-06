@@ -5,12 +5,52 @@ import '../models/cart_models.dart';
 /// Cart Service
 ///
 /// Provides methods for cart operations:
-/// - Add item to cart
-/// - View cart
-/// - Update cart item quantity
-/// - Remove item from cart
-/// - Clear cart
-/// - Process cart (create transaction)
+/// - Add item to cart (UPSERT: adds new or increments existing quantity)
+/// - View cart (get all items in cart with summary)
+/// - Update cart item quantity (set specific quantity)
+/// - Remove item from cart (delete specific cart item)
+/// - Clear cart (delete all items in cart)
+/// - Process cart (create transaction and clear cart)
+///
+/// **Cart Behavior:**
+/// - All cart operations are performed on the backend
+/// - Cart is identified by a UUID (generate with uuid package)
+/// - Items in the same cart share the same cart_id
+/// - When adding an item that already exists in cart, the quantity is ADDED (not replaced)
+/// - Cart is automatically cleared after successful transaction processing
+/// - Always use `viewCart()` after `addToCart()` to get the latest cart state
+///
+/// **Example Usage:**
+/// ```dart
+/// // Generate cart ID once per session
+/// final cartId = Uuid().v4();
+///
+/// // Add items to cart (multiple items, same cart ID)
+/// await apiService.cart.addToCart(
+///   cartId: cartId,
+///   licenseKey: 'LICENSE-KEY',
+///   itemId: 'item-1-id',
+///   quantity: 2.5,
+/// );
+///
+/// await apiService.cart.addToCart(
+///   cartId: cartId,
+///   licenseKey: 'LICENSE-KEY',
+///   itemId: 'item-2-id',
+///   quantity: 1.0,
+/// );
+///
+/// // View all items in cart
+/// final cart = await apiService.cart.viewCart(cartId: cartId);
+/// print('Total items: ${cart.summary.totalItems}');
+///
+/// // Process cart (create transaction)
+/// final result = await apiService.cart.processCart(
+///   cartId: cartId,
+///   licenseKey: 'LICENSE-KEY',
+/// );
+/// print('Transaction ID: ${result.transactionId}');
+/// ```
 class KgitonCartService {
   final KgitonApiClient _client;
 
@@ -179,36 +219,55 @@ class KgitonCartService {
   ///
   /// [cartId] - UUID of the cart to process
   /// [licenseKey] - License key for the transaction
+  /// [paymentMethod] - Payment method (default: 'qris')
+  /// [notes] - Optional transaction notes
+  /// [autoClear] - Auto clear cart after successful transaction (default: true)
   ///
   /// Returns [ProcessCartData] containing transaction details
   ///
-  /// ✅ This method automatically clears the cart after successful transaction creation.
+  /// ✅ **Auto-Clear Behavior (NEW):**
+  /// - By default (`autoClear: true`), cart is automatically cleared after successful transaction
+  /// - Set `autoClear: false` to handle clearing manually
   ///
   /// This method will:
   /// 1. Create a transaction with all cart items
   /// 2. Add processing fee
-  /// 3. **Automatically clear cart** from backend (using clearCartByLicense)
+  /// 3. **Automatically clear cart** from backend (if autoClear=true)
   /// 4. Return transaction details
   ///
   /// If transaction creation fails, cart will NOT be cleared (user can retry).
   ///
-  /// Example:
+  /// Example (default auto-clear):
   /// ```dart
   /// try {
   ///   final result = await cartService.processCart(
   ///     cartId: cartId,
   ///     licenseKey: licenseKey,
+  ///     // autoClear defaults to true
   ///   );
   ///
   ///   // Cart is already cleared from backend ✅
   ///   print('Transaction: ${result.transactionId}');
   ///
-  ///   // Just clear local state
-  ///   setState(() => _cartItems.clear());
   /// } catch (e) {
   ///   print('Checkout failed: $e');
   ///   // Cart NOT cleared - user can retry
   /// }
+  /// ```
+  ///
+  /// Example (manual clear):
+  /// ```dart
+  /// final result = await cartService.processCart(
+  ///   cartId: cartId,
+  ///   licenseKey: licenseKey,
+  ///   autoClear: false, // Disable auto-clear
+  /// );
+  ///
+  /// // Do something before clearing...
+  /// await saveTransactionLocally(result);
+  ///
+  /// // Manually clear when ready
+  /// await cartService.clearCartByLicense(licenseKey: licenseKey);
   /// ```
   ///
   /// Throws:
@@ -216,12 +275,24 @@ class KgitonCartService {
   /// - [KgitonNotFoundException] if cart is empty or not found
   /// - [KgitonValidationException] if validation fails
   /// - [KgitonApiException] for other errors
-  Future<ProcessCartData> processCart({required String cartId, required String licenseKey}) async {
-    final request = ProcessCartRequest(cartId: cartId, licenseKey: licenseKey);
+  Future<ProcessCartData> processCart({
+    required String cartId,
+    required String licenseKey,
+    String? paymentMethod,
+    String? notes,
+    bool autoClear = true,
+  }) async {
+    final requestBody = {
+      'cart_id': cartId,
+      'license_key': licenseKey,
+      if (paymentMethod != null) 'payment_method': paymentMethod,
+      if (notes != null) 'notes': notes,
+      'auto_clear': autoClear,
+    };
 
     final response = await _client.post<ProcessCartData>(
       KgitonApiEndpoints.processCart,
-      body: request.toJson(),
+      body: requestBody,
       requiresAuth: true,
       fromJsonT: (json) => ProcessCartData.fromJson(json as Map<String, dynamic>),
     );
@@ -229,9 +300,6 @@ class KgitonCartService {
     if (!response.success || response.data == null) {
       throw Exception('Failed to process cart: ${response.message}');
     }
-
-    // Automatically clear cart after successful transaction
-    await clearCartByLicense(licenseKey: licenseKey);
 
     return response.data!;
   }
