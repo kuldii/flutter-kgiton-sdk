@@ -36,6 +36,7 @@ export 'src/api/api_constants.dart';
 export 'src/api/services/auth_service.dart';
 export 'src/api/services/license_service.dart';
 export 'src/api/services/owner_service.dart';
+export 'src/api/services/cart_service.dart';
 export 'src/api/services/transaction_service.dart';
 export 'src/api/services/admin_settings_service.dart';
 
@@ -44,6 +45,7 @@ export 'src/api/models/api_response.dart';
 export 'src/api/models/auth_models.dart';
 export 'src/api/models/license_models.dart';
 export 'src/api/models/item_models.dart';
+export 'src/api/models/cart_models.dart';
 export 'src/api/models/transaction_models.dart';
 export 'src/api/models/admin_models.dart';
 
