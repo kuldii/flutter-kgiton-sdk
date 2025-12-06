@@ -120,11 +120,7 @@ class KgitonApiClient {
 
     try {
       jsonBody = json.decode(response.body) as Map<String, dynamic>;
-      print('[KgitonApiClient] Response status: ${response.statusCode}');
-      print('[KgitonApiClient] Response body: ${response.body.substring(0, response.body.length > 500 ? 500 : response.body.length)}');
     } catch (e) {
-      print('[KgitonApiClient] JSON decode error: $e');
-      print('[KgitonApiClient] Response body: ${response.body}');
       throw KgitonApiException(message: 'Invalid JSON response', statusCode: response.statusCode);
     }
 
@@ -181,15 +177,6 @@ class KgitonApiClient {
   Future<ApiResponse<T>> post<T>(String endpoint, {Map<String, dynamic>? body, bool requiresAuth = false, T Function(dynamic)? fromJsonT}) async {
     try {
       final uri = Uri.parse(_buildUrl(endpoint));
-
-      // Log request details
-      print('[KgitonApiClient] POST Request:');
-      print('[KgitonApiClient]   URL: $uri');
-      print('[KgitonApiClient]   Headers: ${_getHeaders(requiresAuth: requiresAuth)}');
-      if (body != null) {
-        final bodyJson = json.encode(body);
-        print('[KgitonApiClient]   Body: ${bodyJson.length > 500 ? bodyJson.substring(0, 500) + '...' : bodyJson}');
-      }
 
       final response = await _httpClient
           .post(
