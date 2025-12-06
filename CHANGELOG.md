@@ -48,6 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✅ Token persistence in local storage
 - ✅ Comprehensive error handling with specific exception types
 - ✅ Support for pagination in list endpoints
+- ✅ Flexible API response parsing (supports both array and object formats)
+- ✅ Handle both `{items: [...], count: 1}` and `[...]` response formats
 - ✅ Date range filtering for transactions
 - ✅ CSV upload/download for license management
 - ✅ Multi-branch support via multiple licenses per owner

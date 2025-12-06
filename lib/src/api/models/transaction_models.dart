@@ -116,19 +116,30 @@ class TransactionDetail {
 /// Transaction list data with pagination
 class TransactionListData {
   final List<Transaction> transactions;
-  final Pagination pagination;
+  final Pagination? pagination;
 
-  TransactionListData({required this.transactions, required this.pagination});
+  TransactionListData({required this.transactions, this.pagination});
 
-  factory TransactionListData.fromJson(Map<String, dynamic> json) {
-    return TransactionListData(
-      transactions: (json['transactions'] as List).map((e) => Transaction.fromJson(e as Map<String, dynamic>)).toList(),
-      pagination: Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
-    );
+  factory TransactionListData.fromJson(dynamic json) {
+    // Handle if response is a List directly
+    if (json is List) {
+      final transactions = json.map((e) => Transaction.fromJson(e as Map<String, dynamic>)).toList();
+      return TransactionListData(transactions: transactions, pagination: null);
+    }
+
+    // Handle if response is an Object with 'transactions' property
+    if (json is Map<String, dynamic>) {
+      return TransactionListData(
+        transactions: (json['transactions'] as List).map((e) => Transaction.fromJson(e as Map<String, dynamic>)).toList(),
+        pagination: json['pagination'] != null ? Pagination.fromJson(json['pagination'] as Map<String, dynamic>) : null,
+      );
+    }
+
+    throw FormatException('Invalid TransactionListData format');
   }
 
   Map<String, dynamic> toJson() {
-    return {'transactions': transactions.map((e) => e.toJson()).toList(), 'pagination': pagination.toJson()};
+    return {'transactions': transactions.map((e) => e.toJson()).toList(), if (pagination != null) 'pagination': pagination!.toJson()};
   }
 }
 

@@ -50,8 +50,19 @@ class ItemListData {
 
   ItemListData({required this.items, required this.count});
 
-  factory ItemListData.fromJson(Map<String, dynamic> json) {
-    return ItemListData(items: (json['items'] as List).map((e) => Item.fromJson(e as Map<String, dynamic>)).toList(), count: json['count'] as int);
+  factory ItemListData.fromJson(dynamic json) {
+    // Handle if response is a List directly
+    if (json is List) {
+      final items = json.map((e) => Item.fromJson(e as Map<String, dynamic>)).toList();
+      return ItemListData(items: items, count: items.length);
+    }
+
+    // Handle if response is an Object with 'items' property
+    if (json is Map<String, dynamic>) {
+      return ItemListData(items: (json['items'] as List).map((e) => Item.fromJson(e as Map<String, dynamic>)).toList(), count: json['count'] as int);
+    }
+
+    throw FormatException('Invalid ItemListData format');
   }
 
   Map<String, dynamic> toJson() {

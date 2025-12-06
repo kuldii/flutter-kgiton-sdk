@@ -37,19 +37,30 @@ class License {
 /// License list data with pagination
 class LicenseListData {
   final List<License> licenses;
-  final Pagination pagination;
+  final Pagination? pagination;
 
-  LicenseListData({required this.licenses, required this.pagination});
+  LicenseListData({required this.licenses, this.pagination});
 
-  factory LicenseListData.fromJson(Map<String, dynamic> json) {
-    return LicenseListData(
-      licenses: (json['licenses'] as List).map((e) => License.fromJson(e as Map<String, dynamic>)).toList(),
-      pagination: Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
-    );
+  factory LicenseListData.fromJson(dynamic json) {
+    // Handle if response is a List directly
+    if (json is List) {
+      final licenses = json.map((e) => License.fromJson(e as Map<String, dynamic>)).toList();
+      return LicenseListData(licenses: licenses, pagination: null);
+    }
+
+    // Handle if response is an Object with 'licenses' property
+    if (json is Map<String, dynamic>) {
+      return LicenseListData(
+        licenses: (json['licenses'] as List).map((e) => License.fromJson(e as Map<String, dynamic>)).toList(),
+        pagination: json['pagination'] != null ? Pagination.fromJson(json['pagination'] as Map<String, dynamic>) : null,
+      );
+    }
+
+    throw FormatException('Invalid LicenseListData format');
   }
 
   Map<String, dynamic> toJson() {
-    return {'licenses': licenses.map((e) => e.toJson()).toList(), 'pagination': pagination.toJson()};
+    return {'licenses': licenses.map((e) => e.toJson()).toList(), if (pagination != null) 'pagination': pagination!.toJson()};
   }
 }
 
@@ -84,11 +95,22 @@ class OwnerLicensesData {
 
   OwnerLicensesData({required this.licenses, required this.count});
 
-  factory OwnerLicensesData.fromJson(Map<String, dynamic> json) {
-    return OwnerLicensesData(
-      licenses: (json['licenses'] as List).map((e) => License.fromJson(e as Map<String, dynamic>)).toList(),
-      count: json['count'] as int,
-    );
+  factory OwnerLicensesData.fromJson(dynamic json) {
+    // Handle if response is a List directly
+    if (json is List) {
+      final licenses = json.map((e) => License.fromJson(e as Map<String, dynamic>)).toList();
+      return OwnerLicensesData(licenses: licenses, count: licenses.length);
+    }
+
+    // Handle if response is an Object with 'licenses' property
+    if (json is Map<String, dynamic>) {
+      return OwnerLicensesData(
+        licenses: (json['licenses'] as List).map((e) => License.fromJson(e as Map<String, dynamic>)).toList(),
+        count: json['count'] as int,
+      );
+    }
+
+    throw FormatException('Invalid OwnerLicensesData format');
   }
 
   Map<String, dynamic> toJson() {
