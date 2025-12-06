@@ -36,8 +36,10 @@ class PermissionHelper {
         return allGranted;
       } else if (androidVersion >= 29) {
         // Android 10-11 (API 29-30) - CRITICAL: Memerlukan FINE_LOCATION
-        _logger.i('Requesting Android 10-11 permissions (BLUETOOTH, BLUETOOTH_ADMIN, FINE_LOCATION)');
-        statuses = await [Permission.bluetooth, Permission.location].request();
+        _logger.i('Requesting Android 10-11 permissions (FINE_LOCATION)');
+        // NOTE: Permission.bluetooth tidak tersedia di permission_handler untuk Android < 12
+        // Bluetooth permissions (BLUETOOTH, BLUETOOTH_ADMIN) di-granted otomatis via manifest
+        statuses = await [Permission.location].request();
 
         // Check if location service is enabled
         final locationServiceEnabled = await Permission.location.serviceStatus.isEnabled;
@@ -51,8 +53,8 @@ class PermissionHelper {
         return allGranted && locationServiceEnabled;
       } else {
         // Android 9 and below (API 28-)
-        _logger.i('Requesting Android 9- permissions (BLUETOOTH, BLUETOOTH_ADMIN, COARSE_LOCATION)');
-        statuses = await [Permission.bluetooth, Permission.location].request();
+        _logger.i('Requesting Android 9- permissions (COARSE_LOCATION)');
+        statuses = await [Permission.location].request();
 
         final allGranted = statuses.values.every((status) => status.isGranted);
         _logger.i('Android 9- permissions result: $allGranted');
@@ -99,15 +101,15 @@ class PermissionHelper {
         return hasScan && hasConnect;
       } else if (androidVersion >= 29) {
         // Android 10-11 (API 29-30) - Memerlukan location
-        final hasBluetooth = await Permission.bluetooth.isGranted;
+        // NOTE: Permission.bluetooth tidak tersedia, Bluetooth permissions granted otomatis via manifest
         final hasLocation = await Permission.location.isGranted;
         final locationServiceEnabled = await Permission.location.serviceStatus.isEnabled;
-        return hasBluetooth && hasLocation && locationServiceEnabled;
+        return hasLocation && locationServiceEnabled;
       } else {
         // Android 9 and below (API 28-)
-        final hasBluetooth = await Permission.bluetooth.isGranted;
+        // NOTE: Permission.bluetooth tidak tersedia, Bluetooth permissions granted otomatis via manifest
         final hasLocation = await Permission.location.isGranted;
-        return hasBluetooth && hasLocation;
+        return hasLocation;
       }
     } catch (e) {
       _logger.e('Error checking Android BLE permissions: $e');
@@ -137,15 +139,20 @@ class PermissionHelper {
     if (!Platform.isAndroid) return 0;
 
     try {
-      // Coba detect dari permission availability
-      if (await Permission.bluetoothScan.isGranted || await Permission.bluetoothScan.isDenied || await Permission.bluetoothScan.isPermanentlyDenied) {
+      // Coba detect dari permission availability - Android 12+ memiliki bluetoothScan
+      final scanStatus = await Permission.bluetoothScan.status;
+      // Jika status bukan restricted/limited, berarti API 31+
+      if (scanStatus != PermissionStatus.restricted && scanStatus != PermissionStatus.limited) {
         return 31; // Android 12+
       }
-      return 29; // Assume Android 10+ if bluetooth scan permission doesn't exist
     } catch (e) {
       // If bluetoothScan throws error, it means API < 31
-      return 29; // Default to Android 10
+      _logger.d('bluetoothScan not available, Android < 12');
     }
+
+    // Default ke Android 10 untuk testing purposes
+    // Pada production, bisa gunakan platform channel untuk get exact API level
+    return 29;
   }
 
   /// Check apakah location service aktif (untuk Android 10-11)
@@ -172,7 +179,7 @@ class PermissionHelper {
         result['bluetoothScan'] = (await Permission.bluetoothScan.status).toString();
         result['bluetoothConnect'] = (await Permission.bluetoothConnect.status).toString();
       } else {
-        result['bluetooth'] = (await Permission.bluetooth.status).toString();
+        // Permission.bluetooth tidak tersedia untuk Android < 12
         result['location'] = (await Permission.location.status).toString();
         result['locationServiceEnabled'] = await isLocationServiceEnabled();
       }
@@ -202,13 +209,9 @@ class PermissionHelper {
         }
       } else if (androidVersion >= 29) {
         // Android 10-11
-        final hasBluetooth = await Permission.bluetooth.isGranted;
         final hasLocation = await Permission.location.isGranted;
         final locationServiceEnabled = await isLocationServiceEnabled();
 
-        if (!hasBluetooth) {
-          return 'Aplikasi memerlukan izin Bluetooth. Silakan berikan izin di Settings.';
-        }
         if (!hasLocation) {
           return 'Aplikasi memerlukan izin Lokasi untuk scan perangkat Bluetooth pada Android 10/11. '
               'Silakan berikan izin di Settings.';
